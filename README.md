@@ -68,10 +68,10 @@ $data = [
 //     - "id" with a numeric value,
 //     - "name" with the value "Arthur Dent", and
 //     - "options" with another associative array with the key "panic", whose value must be a boolean
-self::assertAssociativeArray([
-    'id'      => new IsType(IsType::TYPE_INT),
-    'name'    => new IsIdentical('Arthur Dent'),
-    'options' => new AssociativeArray([ 'panic' => new IsType(IsType::TYPE_BOOL) ], true)
+$this->assertAssociativeArray([
+    'id'      => $this->isType(IsType::TYPE_INT),
+    'name'    => $this->identicalTo('Arthur Dent'),
+    'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ], true)
 ], $data);
 ```
 
@@ -109,7 +109,7 @@ $data = [
 ];
 
 // asserts that $data has the item `name` with the value "Arthur Dent"
-self::ArrayHasKeyWith('name', new IsIdentical('Arthur Dent'), $data);
+$this->assertArrayHasKeyWith('name', $this->identicalTo('Arthur Dent'), $data);
 ```
 
 ### Constraint `SequentialArray`
@@ -153,7 +153,7 @@ $data = [
 ];
 
 // asserts that `$data` is a non-empty sequential array with non-empty items
-self::assertSequentialArray($data, 1, null, self::logicalNot(new IsEmpty()));
+$this->assertSequentialArray($data, 1, null, $this->logicalNot($this->isEmpty()));
 ```
 
 ### Constraint `ArrayHasItemWith`
@@ -195,7 +195,7 @@ $data = [
 ];
 
 // asserts that `$data` contains "Life, the Universe and Everything" as third item (i.e. at index 2)
-self::ArrayHasItemWith(2, new IsIdentical("Life, the Universe and Everything""));
+$this->assertArrayHasItemWith(2, $this->identicalTo("Life, the Universe and Everything"));
 ```
 
 Example
@@ -207,12 +207,9 @@ declare(strict_types=1);
 
 namespace YourName\YourProject\Tests;
 
-use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\TestCase;
 use PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait;
-use PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray;
-use PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray;
 
 class MyTest extends TestCase
 {
@@ -220,6 +217,8 @@ class MyTest extends TestCase
 
     public function testWithPHPUnitArrayAsserts(): void
     {
+        // 7 lines of easy to understand code to check the API response *with* PHPUnitArrayAsserts
+
         // implement your test, the result is stored in $responseData
 
         $responseData = [
@@ -232,19 +231,19 @@ class MyTest extends TestCase
             ]
         ];
 
-        $this->assertArrayHasKeyWith('users', new SequentialArray(1), $responseData);
+        $this->assertArrayHasKeyWith('users', $this->sequentialArray(1), $responseData);
 
         $this->assertAssociativeArray([
-            'id'      => new IsType(IsType::TYPE_INT),
-            'name'    => new IsIdentical('Arthur Dent'),
-            'options' => new AssociativeArray([ 'panic' => new IsType(IsType::TYPE_BOOL) ], true)
+            'id'      => $this->isType(IsType::TYPE_INT),
+            'name'    => $this->identicalTo('Arthur Dent'),
+            'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ], true)
         ], $responseData['users'][0]);
-
-        // 7 lines of easier to understand code to check the API response *with* PHPUnitArrayAsserts
     }
     
     public function testWithoutPHPUnitArrayAsserts(): void
     {
+        // 18 lines of pretty repetitive code to check the API response *without* PHPUnitArrayAsserts
+
         // implement your test, the result is stored in $responseData
 
         $responseData = [
@@ -275,8 +274,6 @@ class MyTest extends TestCase
 
         $this->assertArrayHasKey('panic', $userData['options']);
         $this->assertIsBool($userData['options']['bool']);
-
-        // 18 lines of pretty repetitive code to check the API response *without* PHPUnitArrayAsserts
     }
 }
 ```

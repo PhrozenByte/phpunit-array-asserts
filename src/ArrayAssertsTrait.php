@@ -68,6 +68,25 @@ trait ArrayAssertsTrait
     }
 
     /**
+     * Returns a new instance of the AssociativeArray constraint.
+     *
+     * @param Constraint[] $constraints     an associative array with the expected keys and constraints to apply
+     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to FALSE)
+     * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
+     *
+     * @return AssociativeArray
+     *
+     * @throws Exception
+     */
+    public static function associativeArray(
+        array $constraints,
+        bool $allowAdditional = false,
+        bool $allowMissing = false
+    ): AssociativeArray {
+        return new AssociativeArray($constraints, $allowAdditional, $allowMissing);
+    }
+
+    /**
      * Asserts that an array has a given key and that its value passes another
      * constraint.
      *
@@ -92,6 +111,21 @@ trait ArrayAssertsTrait
 
         $constraint = new ArrayHasKeyWith($key, $constraint);
         PHPUnitAssert::assertThat($array, $constraint, $message);
+    }
+
+    /**
+     * Returns a new instance of the ArrayHasKeyWith constraint.
+     *
+     * @param int|string $key        the key of the item to check
+     * @param Constraint $constraint the constraint the item's value is applied to
+     *
+     * @return ArrayHasKeyWith
+     *
+     * @throws Exception
+     */
+    public static function arrayHasKeyWith($key, Constraint $constraint): ArrayHasKeyWith
+    {
+        return new ArrayHasKeyWith($key, $constraint);
     }
 
     /**
@@ -136,6 +170,25 @@ trait ArrayAssertsTrait
     }
 
     /**
+     * Returns a new instance of the SequentialArray constraint.
+     *
+     * @param int             $minItems   required minimum number of items, defaults to 0
+     * @param int|null        $maxItems   required maximum number of items, defaults to NULL (infinite)
+     * @param Constraint|null $constraint optional constraint to apply all items to (defaults to NULL)
+     *
+     * @return SequentialArray
+     *
+     * @throws Exception
+     */
+    public static function sequentialArray(
+        int $minItems,
+        int $maxItems = null,
+        Constraint $constraint = null
+    ): SequentialArray {
+        return new SequentialArray($minItems, $maxItems, $constraint);
+    }
+
+    /**
      * Asserts that an array has a item at a given index and that its value
      * passes another constraint.
      *
@@ -156,5 +209,20 @@ trait ArrayAssertsTrait
 
         $constraint = new ArrayHasItemWith($index, $constraint);
         PHPUnitAssert::assertThat($array, $constraint, $message);
+    }
+
+    /**
+     * Returns a new instance of the ArrayHasItemWith constraint.
+     *
+     * @param int        $index      the index of the item to check
+     * @param Constraint $constraint the constraint the item's value is applied to
+     *
+     * @return ArrayHasItemWith
+     *
+     * @throws Exception
+     */
+    public static function arrayHasItemWith(int $index, Constraint $constraint): ArrayHasItemWith
+    {
+        return new ArrayHasItemWith($index, $constraint);
     }
 }
