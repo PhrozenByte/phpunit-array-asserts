@@ -1,0 +1,35 @@
+{
+    "name": "phrozenbyte/phpunit-array-asserts",
+    "type": "library",
+    "description": "Provides various array-related PHPUnit assertions, primarily used for API testing.",
+    "keywords": [ "php", "phpunit", "phpunit-extension", "phpunit-assertions" ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Rudolf",
+            "homepage": "https://www.daniel-rudolf.de/"
+        }
+    ],
+    "support": {
+        "docs": "https://github.com/PhrozenByte/phpunit-array-asserts",
+        "issues": "https://github.com/PhrozenByte/phpunit-array-asserts/issues",
+        "source": "https://github.com/PhrozenByte/phpunit-array-asserts"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhrozenByte\\PHPUnitArrayAsserts\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhrozenByte\\PHPUnitArrayAsserts\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=7.2.0",
+        "phplucidframe/console-table": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
