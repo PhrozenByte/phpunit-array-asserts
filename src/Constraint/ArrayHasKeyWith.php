@@ -87,12 +87,4 @@ class ArrayHasKeyWith extends Constraint
     {
         return $this->constraint->count() + 1;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function failureDescription($other): string
-    {
-        return 'an array ' . $this->toString();
-    }
 }
