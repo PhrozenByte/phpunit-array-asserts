@@ -68,26 +68,22 @@ class ArrayHasItemWith extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function evaluate($other, string $description = '', bool $returnResult = false)
+    protected function matches($other): bool
     {
-        $success = false;
+        $valueExists = false;
         if (is_array($other)) {
             $other = array_values($other);
-            $success = isset($other[$this->index]);
+            $valueExists = isset($other[$this->index]);
         } elseif ($other instanceof Traversable) {
             $other = iterator_to_array($other, false);
-            $success = isset($other[$this->index]);
+            $valueExists = isset($other[$this->index]);
         }
 
-        if (!$success) {
-            if ($returnResult) {
-                return false;
-            }
-
-            $this->fail($other, $description);
+        if (!$valueExists) {
+            return false;
         }
 
-        return $this->constraint->evaluate($other[$this->index], $description, $returnResult);
+        return $this->constraint->evaluate($other[$this->index], '', true);
     }
 
     /**

@@ -64,24 +64,20 @@ class ArrayHasKeyWith extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function evaluate($other, string $description = '', bool $returnResult = false)
+    protected function matches($other): bool
     {
-        $success = false;
+        $valueExists = false;
         if (is_array($other)) {
-            $success = array_key_exists($this->key, $other);
+            $valueExists = array_key_exists($this->key, $other);
         } elseif ($other instanceof ArrayAccess) {
-            $success = $other->offsetExists($this->key);
+            $valueExists = $other->offsetExists($this->key);
         }
 
-        if (!$success) {
-            if ($returnResult) {
-                return false;
-            }
-
-            $this->fail($other, $description);
+        if (!$valueExists) {
+            return false;
         }
 
-        return $this->constraint->evaluate($other[$this->key], $description, $returnResult);
+        return $this->constraint->evaluate($other[$this->key], '', true);
     }
 
     /**
