@@ -57,7 +57,7 @@ class ArrayHasKeyWith extends Constraint
      */
     public function toString(): string
     {
-        return 'has the key ' . $this->exporter()->export($this->key) . ' '
+        return 'is an array that has the key ' . $this->exporter()->export($this->key) . ' '
             . 'whose value ' . $this->constraint->toString();
     }
 

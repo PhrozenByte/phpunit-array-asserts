@@ -61,7 +61,7 @@ class ArrayHasItemWith extends Constraint
      */
     public function toString(): string
     {
-        return 'has a value at index ' . $this->index . ' '
+        return 'is an array that has a value at index ' . $this->index . ' '
                 . 'which ' . $this->constraint->toString();
     }
 
