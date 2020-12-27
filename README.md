@@ -33,7 +33,7 @@ All options do the same, the only difference is that the static class and trait 
 
 The `AssociativeArray` constraint asserts that a value is an associative array matching a given structure and that the array's items pass other constraints.
 
-Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, additional items will fail the constraint (parameter `$allowAdditional`, defaults to `false`). The same is true when items are missing (parameter `$allowMissing`, defaults to `false`). The expected keys and constraints to apply, as well as whether additional and/or missing items should fail the constraint, are passed in the constructor.
+Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, missing items will fail the constraint (parameter `$allowMissing`, defaults to `false`). Additional items will be ignored by default (parameter `$allowAdditional`, defaults to `true`). If you want the constraint to fail when additional items exist, set this option to `true`, however, please note that this works for native arrays only. The expected keys and constraints to apply, as well as whether missing and/or additional items should fail the constraint, are passed in the constructor.
 
 **Usage:**
 
@@ -42,16 +42,16 @@ Any native array and `ArrayAccess` object is considered an associative array, no
 self::assertAssociativeArray(
     array $constraints,            // an associative array with the expected keys and constraints to apply
     array|ArrayAccess $array,      // the associative array to check
-    bool $allowAdditional = false, // whether additional items should fail the constraint
     bool $allowMissing = false,    // whether missing items should fail the constraint
+    bool $allowAdditional = true,  // whether additional items should fail the constraint
     string $message = ''           // additional information about the test
 );
 
 // using new instance of `\PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray`
 new AssociativeArray(
     array $constraints,
-    bool $allowAdditional = false,
-    bool $allowMissing = false
+    bool $allowMissing = false,
+    bool $allowAdditional = true
 );
 ```
 
@@ -236,13 +236,13 @@ class MyTest extends TestCase
         $this->assertAssociativeArray([
             'id'      => $this->isType(IsType::TYPE_INT),
             'name'    => $this->identicalTo('Arthur Dent'),
-            'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ], true)
+            'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ])
         ], $responseData['users'][0]);
     }
     
     public function testWithoutPHPUnitArrayAsserts(): void
     {
-        // 18 lines of pretty repetitive code to check the API response *without* PHPUnitArrayAsserts
+        // 17 lines of pretty repetitive code to check the API response *without* PHPUnitArrayAsserts
 
         // implement your test, the result is stored in $responseData
 
@@ -261,7 +261,6 @@ class MyTest extends TestCase
         $this->assertGreaterThanOrEqual(1, count($responseData['users'])); // won't work for Traversable
 
         $userData = $responseData['users'][0]; // we can't really rely on the existence of key "0" here :/
-        $this->assertEmpty(array_diff_key($userData, [ 'id' => true, 'name' => true, 'options' => true ]));
 
         $this->assertArrayHasKey('id', $userData);
         $this->assertIsInt($userData['id']);
@@ -273,7 +272,7 @@ class MyTest extends TestCase
         $this->assertIsArray($userData['options']);
 
         $this->assertArrayHasKey('panic', $userData['options']);
-        $this->assertIsBool($userData['options']['bool']);
+        $this->assertIsBool($userData['options']['panic']);
     }
 }
 ```

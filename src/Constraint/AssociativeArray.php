@@ -43,19 +43,20 @@ class AssociativeArray extends Constraint
     protected $constraints = [];
 
     /** @var bool */
-    protected $allowAdditional;
+    protected $allowMissing;
 
     /** @var bool */
-    protected $allowMissing;
+    protected $allowAdditional;
 
     /**
      * AssociativeArray constructor.
      *
      * @param Constraint[] $constraints     an associative array with the expected keys and constraints to apply
-     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to FALSE)
      * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
+     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
+     *                                      this option works for native arrays only
      */
-    public function __construct(array $constraints, bool $allowAdditional = false, bool $allowMissing = false)
+    public function __construct(array $constraints, bool $allowMissing = false, bool $allowAdditional = true)
     {
         foreach ($constraints as $key => $constraint) {
             if (!($constraint instanceof Constraint)) {
@@ -66,8 +67,8 @@ class AssociativeArray extends Constraint
             $this->constraints[$key] = $constraint;
         }
 
-        $this->allowAdditional = $allowAdditional;
         $this->allowMissing = $allowMissing;
+        $this->allowAdditional = $allowAdditional;
     }
 
     /**
@@ -82,7 +83,7 @@ class AssociativeArray extends Constraint
         }
 
         return 'is an associative array that '
-            . implode(!$this->allowMissing ? ' and ' : ' or ', $constraintDescriptions)
+            . implode(!$this->allowMissing ? ' and ' : ' and/or ', $constraintDescriptions)
             . ($this->allowAdditional ? ' or any other item' : '');
     }
 
@@ -104,7 +105,7 @@ class AssociativeArray extends Constraint
             }
         }
 
-        if (!$this->allowAdditional) {
+        if (is_array($other) && !$this->allowAdditional) {
             return !array_diff_key($other, $this->constraints);
         }
 
@@ -165,9 +166,9 @@ class AssociativeArray extends Constraint
 
         $output = $table->getTable();
         $output .= sprintf(
-            "[%s] Allow additional; [%s] Allow missing\n",
-            $this->allowAdditional ? 'x' : ' ',
-            $this->allowMissing ? 'x' : ' '
+            "[%s] Allow missing; [%s] Allow additional\n",
+            $this->allowMissing ? 'x' : ' ',
+            $this->allowAdditional ? 'x' : ' '
         );
 
         return $output;

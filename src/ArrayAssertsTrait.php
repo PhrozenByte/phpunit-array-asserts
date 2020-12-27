@@ -39,8 +39,9 @@ trait ArrayAssertsTrait
      *
      * @param Constraint[]      $constraints     an associative array with the expected keys and constraints to apply
      * @param array|ArrayAccess $array           the associative array to check
-     * @param bool              $allowAdditional whether additional items should fail the constraint (defaults to FALSE)
      * @param bool              $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
+     * @param bool              $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
+     *                                           this option works for native arrays only
      * @param string            $message         additional information about the test
      *
      * @throws ExpectationFailedException
@@ -50,8 +51,8 @@ trait ArrayAssertsTrait
     public static function assertAssociativeArray(
         array $constraints,
         $array,
-        bool $allowAdditional = false,
         bool $allowMissing = false,
+        bool $allowAdditional = true,
         string $message = ''
     ): void {
         $isNoConstraint = static function ($constraint): bool { return !($constraint instanceof Constraint); };
@@ -63,7 +64,11 @@ trait ArrayAssertsTrait
             throw InvalidArgumentException::create(2, 'array or ArrayAccess');
         }
 
-        $constraint = new AssociativeArray($constraints, $allowAdditional, $allowMissing);
+        if (!is_array($array) && !$allowAdditional) {
+            throw InvalidArgumentException::create(2, 'array when argument #4 is set true');
+        }
+
+        $constraint = new AssociativeArray($constraints, $allowMissing, $allowAdditional);
         PHPUnitAssert::assertThat($array, $constraint, $message);
     }
 
@@ -71,8 +76,9 @@ trait ArrayAssertsTrait
      * Returns a new instance of the AssociativeArray constraint.
      *
      * @param Constraint[] $constraints     an associative array with the expected keys and constraints to apply
-     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to FALSE)
      * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
+     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
+     *                                      this option works for native arrays only
      *
      * @return AssociativeArray
      *
@@ -80,10 +86,10 @@ trait ArrayAssertsTrait
      */
     public static function associativeArray(
         array $constraints,
-        bool $allowAdditional = false,
-        bool $allowMissing = false
+        bool $allowMissing = false,
+        bool $allowAdditional = true
     ): AssociativeArray {
-        return new AssociativeArray($constraints, $allowAdditional, $allowMissing);
+        return new AssociativeArray($constraints, $allowMissing, $allowAdditional);
     }
 
     /**
