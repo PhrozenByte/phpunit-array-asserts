@@ -76,15 +76,33 @@ class AssociativeArray extends Constraint
      */
     public function toString(): string
     {
-        $constraintDescriptions = [];
-        foreach ($this->constraints as $key => $constraint) {
-            $constraintDescriptions[] = 'has the key ' . $this->exporter()->export($key) . ' '
-                    . 'whose value ' . $constraint->toString();
+        if (!$this->constraints) {
+            return $this->allowAdditional ? 'is an associative array' : 'is an empty array';
         }
 
-        return 'is an associative array that '
-            . implode(!$this->allowMissing ? ' and ' : ' and/or ', $constraintDescriptions)
-            . ($this->allowAdditional ? ' or any other item' : '');
+        $templateArguments = [];
+        foreach ($this->constraints as $key => $constraint) {
+            $templateArguments[] = $this->exporter()->export($key);
+            $templateArguments[] = $constraint->toString();
+        }
+
+        $itemConjunction = !$this->allowMissing ? 'and' : 'and/or';
+        $itemCount = count($this->constraints);
+
+        if ($this->allowAdditional) {
+            $itemTemplate = sprintf(', %s has the key %%s whose value %%s', $itemConjunction);
+            $template = 'is an associative array that has the key %s whose value %s'
+                . str_repeat($itemTemplate, $itemCount - 1)
+                . sprintf(', %s any other item', $itemConjunction);
+
+            return vsprintf($template, $templateArguments);
+        } else {
+            $itemTemplate = sprintf(', %s the key %%s whose value %%s', $itemConjunction);
+            $template = 'is an associative array that has just the key %s whose value %s'
+                . str_repeat($itemTemplate, $itemCount - 1);
+
+            return vsprintf($template, $templateArguments);
+        }
     }
 
     /**
