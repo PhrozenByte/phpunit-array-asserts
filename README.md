@@ -75,6 +75,28 @@ $this->assertAssociativeArray([
 ], $data);
 ```
 
+**Debugging:**
+
+```php
+$data = [
+    'answer' => 21 /* half the truth */
+];
+
+$this->assertAssociativeArray([
+    'answer' => $this->identicalTo(42)
+], $data);
+
+// Will fail with the following message:
+//
+//     Failed asserting that associative array matches constraints.
+//     +----------+-------+--------------------------+
+//     | Key      | Value | Constraint               |
+//     +----------+-------+--------------------------+
+//     | 'answer' | 21    | Value is identical to 42 |
+//     +----------+-------+--------------------------+
+//     [ ] Allow missing; [x] Allow additional
+```
+
 ### Constraint `ArrayHasKeyWith`
 
 The `ArrayHasKeyWith` constraint asserts that an array has a given key and that its value passes another constraint.
@@ -110,6 +132,19 @@ $data = [
 
 // asserts that $data has the item `name` with the value "Arthur Dent"
 $this->assertArrayHasKeyWith('name', $this->identicalTo('Arthur Dent'), $data);
+```
+
+**Debugging:**
+
+```php
+$data = [];
+
+$this->assertArrayHasKeyWith('answer', $this->identicalTo(42), $data);
+
+// Will fail with the following message:
+//
+//     Failed asserting that Array &0 () is an array that
+//     has the key 'answer' whose value is identical to 42.
 ```
 
 ### Constraint `SequentialArray`
@@ -156,6 +191,19 @@ $data = [
 $this->assertSequentialArray($data, 1, null, $this->logicalNot($this->isEmpty()));
 ```
 
+**Debugging:**
+
+```php
+$data = [];
+
+$this->assertSequentialArray($data, 4, null, $this->is(IsType::TYPE_STRING));
+
+// Will fail with the following message:
+//
+//     Failed asserting that Array &0 () is is a sequential array
+//     with ≥ 4 items matching the constraint "is of type "string"".
+```
+
 ### Constraint `ArrayHasItemWith`
 
 The `ArrayHasItemWith` constraint asserts that an array has a item at a given index and that its value passes another constraint.
@@ -196,6 +244,19 @@ $data = [
 
 // asserts that `$data` contains "Life, the Universe and Everything" as third item (i.e. at index 2)
 $this->assertArrayHasItemWith(2, $this->identicalTo("Life, the Universe and Everything"));
+```
+
+**Debugging:**
+
+```php
+$data = [];
+
+$this->assertArrayHasItemWith(2, $this->identicalTo('Arthur Dent'), $data);
+
+// Will fail with the following message:
+//
+//     Failed asserting that Array &0 () is an array that
+//     has a value at index 2 which is identical to 'Arthur Dent'.
 ```
 
 Example
