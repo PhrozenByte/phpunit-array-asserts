@@ -182,6 +182,16 @@ class AssociativeArray extends Constraint
             ]);
         }
 
+        if (is_array($other)) {
+            foreach (array_diff_key($other, $this->constraints) as $key => $value) {
+                $table->addRow([
+                    $this->exporter()->export($key),
+                    $this->exporter()->shortenedExport($value),
+                    ''
+                ]);
+            }
+        }
+
         $output = $table->getTable();
         $output .= sprintf(
             "[%s] Allow missing; [%s] Allow additional\n",
