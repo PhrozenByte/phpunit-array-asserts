@@ -22,7 +22,7 @@ namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 use ArrayAccess;
 use LucidFrame\Console\ConsoleTable;
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\InvalidArgumentException;
 
 /**
  * Constraint that asserts that a value is an associative array matching a
@@ -55,18 +55,17 @@ class AssociativeArray extends Constraint
      * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
      * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
      *                                      this option works for native arrays only
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(array $constraints, bool $allowMissing = false, bool $allowAdditional = true)
     {
-        foreach ($constraints as $key => $constraint) {
-            if (!($constraint instanceof Constraint)) {
-                $errorTemplate = 'All constraints of %s must be instances of %s.';
-                throw new PHPUnitException(sprintf($errorTemplate, __CLASS__, Constraint::class));
-            }
-
-            $this->constraints[$key] = $constraint;
+        $isNoConstraint = static function ($constraint): bool { return !($constraint instanceof Constraint); };
+        if (!(is_array($constraints) && !array_filter($constraints, $isNoConstraint))) {
+            throw InvalidArgumentException::create(1, sprintf('array of %s', Constraint::class));
         }
 
+        $this->constraints = $constraints;
         $this->allowMissing = $allowMissing;
         $this->allowAdditional = $allowAdditional;
     }

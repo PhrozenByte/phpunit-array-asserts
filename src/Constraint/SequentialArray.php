@@ -25,7 +25,7 @@ use Iterator;
 use IteratorAggregate;
 use NoRewindIterator;
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\InvalidArgumentException;
 use Traversable;
 
 /**
@@ -62,16 +62,26 @@ class SequentialArray extends Constraint
      * @param int             $minItems   required minimum number of items, defaults to 0
      * @param int|null        $maxItems   required maximum number of items, defaults to NULL (infinite)
      * @param Constraint|null $constraint optional constraint to apply all items to (defaults to NULL)
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(int $minItems = 0, int $maxItems = null, Constraint $constraint = null)
     {
+        if ($minItems < 0) {
+            throw InvalidArgumentException::create(1, 'non-negative integer');
+        }
+
+        if ($maxItems !== null) {
+            if ($maxItems < 0) {
+                throw InvalidArgumentException::create(2, 'non-negative integer');
+            } elseif ($minItems > $maxItems) {
+                throw InvalidArgumentException::create(2, 'integer not lesser than argument #2');
+            }
+        }
+
         $this->minItems = $minItems;
         $this->maxItems = $maxItems;
         $this->constraint = $constraint;
-
-        if (($this->minItems < 0) || (($this->maxItems !== null) && ($this->minItems > $this->maxItems))) {
-            throw new PHPUnitException(sprintf('Count constraints of %s must not be contradictory.', __CLASS__));
-        }
     }
 
     /**

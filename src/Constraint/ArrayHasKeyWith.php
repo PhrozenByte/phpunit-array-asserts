@@ -21,6 +21,7 @@ namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 
 use ArrayAccess;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\InvalidArgumentException;
 
 /**
  * Constraint that asserts that an array has a given key and that its value
@@ -45,9 +46,15 @@ class ArrayHasKeyWith extends Constraint
      *
      * @param int|string $key        the key of the item to check
      * @param Constraint $constraint the constraint the item's value is applied to
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct($key, Constraint $constraint)
     {
+        if (!(is_int($key) || is_string($key))) {
+            throw InvalidArgumentException::create(1, 'integer or string');
+        }
+
         $this->key = $key;
         $this->constraint = $constraint;
     }

@@ -55,11 +55,6 @@ trait ArrayAssertsTrait
         bool $allowAdditional = true,
         string $message = ''
     ): void {
-        $isNoConstraint = static function ($constraint): bool { return !($constraint instanceof Constraint); };
-        if (!(is_array($constraints) && !array_filter($constraints, $isNoConstraint))) {
-            throw InvalidArgumentException::create(1, sprintf('array of %s', Constraint::class));
-        }
-
         if (!(is_array($array) || ($array instanceof ArrayAccess))) {
             throw InvalidArgumentException::create(2, 'array or ArrayAccess');
         }
@@ -82,7 +77,7 @@ trait ArrayAssertsTrait
      *
      * @return AssociativeArray
      *
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public static function associativeArray(
         array $constraints,
@@ -107,10 +102,6 @@ trait ArrayAssertsTrait
      */
     public static function assertArrayHasKeyWith($key, Constraint $constraint, $array, string $message = ''): void
     {
-        if (!(is_int($key) || is_string($key))) {
-            throw InvalidArgumentException::create(1, 'integer or string');
-        }
-
         if (!(is_array($array) || ($array instanceof ArrayAccess))) {
             throw InvalidArgumentException::create(3, 'array or ArrayAccess');
         }
@@ -127,7 +118,7 @@ trait ArrayAssertsTrait
      *
      * @return ArrayHasKeyWith
      *
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public static function arrayHasKeyWith($key, Constraint $constraint): ArrayHasKeyWith
     {
@@ -155,18 +146,6 @@ trait ArrayAssertsTrait
         Constraint $constraint = null,
         string $message = ''
     ): void {
-        if ($minItems < 0) {
-            throw InvalidArgumentException::create(1, 'non-negative integer');
-        }
-
-        if ($maxItems !== null) {
-            if ($maxItems < 0) {
-                throw InvalidArgumentException::create(2, 'non-negative integer');
-            } elseif ($minItems > $maxItems) {
-                throw InvalidArgumentException::create(2, 'integer not lesser than argument #2');
-            }
-        }
-
         if (!(is_array($array) || ($array instanceof Traversable))) {
             throw InvalidArgumentException::create(3, 'array or Traversable');
         }
@@ -184,7 +163,7 @@ trait ArrayAssertsTrait
      *
      * @return SequentialArray
      *
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public static function sequentialArray(
         int $minItems,
@@ -224,8 +203,6 @@ trait ArrayAssertsTrait
      * @param Constraint $constraint the constraint the item's value is applied to
      *
      * @return ArrayHasItemWith
-     *
-     * @throws Exception
      */
     public static function arrayHasItemWith(int $index, Constraint $constraint): ArrayHasItemWith
     {
