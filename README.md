@@ -1,7 +1,7 @@
 PHPUnitArrayAssertions
 ======================
 
-`PHPUnitArrayAssertions` is a small [PHPUnit](https://phpunit.de/) extension to improve testing of PHP arrays and array-like data. It introduces the `AssociativeArray`, `ArrayHasKeyWith`, `SequentialArray`, and `ArrayHasItemWith` constraints. It is often used for API testing to assert whether an API result matches certain criteria - regarding both its structure, and the data.
+[`PHPUnitArrayAssertions`](https://github.com/PhrozenByte/phpunit-array-asserts) is a small [PHPUnit](https://phpunit.de/) extension to improve testing of PHP arrays and array-like data. It introduces the `AssociativeArray`, `ArrayHasKeyWith`, `SequentialArray`, and `ArrayHasItemWith` constraints. It is often used for API testing to assert whether an API result matches certain criteria - regarding both its structure, and the data.
 
 This PHPUnit extension allows developers to test structure and data in single assertion, making test cases less repetitive and easier to understand. In some way it's an alternative to PHPUnit's `ArraySubset` constraint that was deprecated in PHPUnit 8 and removed in PHPUnit 9 - just way more powerful and less confusing. Refer to the ["Usage" section](#usage) and ["Example" section](#example) below for more info.
 
@@ -261,6 +261,8 @@ $this->assertArrayHasItemWith(2, $this->identicalTo('Arthur Dent'), $data);
 
 Example
 -------
+
+Here's a (more or less) real-world example of `PHPUnitArrayAssertions`. Check out the `testWithPHPUnitArrayAsserts()` method to see how a complex API response is tested. For a comparison with an implementation utilizing just PHPUnit's core features, check out the `testWithoutPHPUnitArrayAsserts()` method. Without `PHPUnitArrayAssertions` you end up having 17 lines of pretty repetitive code, with this PHPUnit extension you can test the response with 7 lines of easy to understand code.
 
 ```php
 <?php

@@ -186,8 +186,12 @@ trait ArrayAssertsTrait
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public static function assertArrayHasItemWith(int $index, Constraint $constraint, $array, string $message = ''): void
-    {
+    public static function assertArrayHasItemWith(
+        int $index,
+        Constraint $constraint,
+        $array,
+        string $message = ''
+    ): void {
         if (!(is_array($array) || ($array instanceof Traversable))) {
             throw InvalidArgumentException::create(3, 'array or Traversable');
         }
