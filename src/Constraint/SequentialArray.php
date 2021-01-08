@@ -229,8 +229,10 @@ class SequentialArray extends Constraint
                     $valid = false;
                 }
 
-                if ($valid && ($this->constraint !== null) && !$this->constraint->evaluate($item, '', true)) {
-                    $itemsValid = false;
+                if ($valid && $itemsValid && ($this->constraint !== null)) {
+                    if (!$this->constraint->evaluate($item, '', true)) {
+                        $itemsValid = false;
+                    }
                 }
             }
 
