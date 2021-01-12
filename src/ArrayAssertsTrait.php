@@ -31,6 +31,21 @@ use PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray;
 use PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray;
 use Traversable;
 
+/**
+ * A set of array-related assertion methods.
+ *
+ * This trait implements an assertion method and constraint creation method per
+ * implemented constraint, namely
+ *
+ * - the `assertAssociativeArray` and `associativeArray` methods for
+ *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray},
+ * - the `assertArrayHasKeyWith` and `arrayHasKeyWith` methods for
+ *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith},
+ * - the `assertSequentialArray` and `sequentialArray` methods for
+ *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray}, and
+ * - the `assertArrayHasItemWith` and `arrayHasItemWith` methods for
+ *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasItemWith}.
+ */
 trait ArrayAssertsTrait
 {
     /**
