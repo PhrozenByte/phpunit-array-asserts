@@ -1,11 +1,21 @@
 PHPUnitArrayAssertions
 ======================
 
-[`PHPUnitArrayAssertions`](https://github.com/PhrozenByte/phpunit-array-asserts) is a small [PHPUnit](https://phpunit.de/) extension to improve testing of PHP arrays and array-like data. It introduces the `AssociativeArray`, `ArrayHasKeyWith`, `SequentialArray`, and `ArrayHasItemWith` constraints. It is often used for API testing to assert whether an API result matches certain criteria - regarding both its structure, and the data.
+[`PHPUnitArrayAssertions`](https://github.com/PhrozenByte/phpunit-array-asserts) is a small [PHPUnit](https://phpunit.de/) extension to improve testing of PHP arrays and array-like data. It introduces the [`AssociativeArray`](#constraint-associativearray), [`ArrayHasKeyWith`](#constraint-arrayhaskeywith), [`SequentialArray`](#constraint-sequentialarray), and [`ArrayHasItemWith`](#constraint-arrayhasitemwith) constraints. It is often used for API testing to assert whether an API result matches certain criteria - regarding both its structure, and the data.
 
 This PHPUnit extension allows developers to test structure and data in single assertion, making test cases less repetitive and easier to understand. In some way it's an alternative to PHPUnit's `ArraySubset` constraint that was deprecated in PHPUnit 8 and removed in PHPUnit 9 - just way more powerful and less confusing. Refer to the ["Usage" section](#usage) and ["Example" section](#example) below for more info.
 
 Made with :heart: by [Daniel Rudolf](https://www.daniel-rudolf.de). `PHPUnitArrayAssertions` is free and open source software, released under the terms of the [MIT license](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/LICENSE).
+
+**Table of contents:**
+
+1. [Install](#install)
+2. [Usage](#usage)
+    1. [Constraint `AssociativeArray`](#constraint-associativearray)
+    2. [Constraint `ArrayHasKeyWith`](#constraint-arrayhaskeywith)
+    3. [Constraint `SequentialArray`](#constraint-sequentialarray)
+    4. [Constraint `ArrayHasItemWith`](#constraint-arrayhasitemwith)
+3. [Example](#example)
 
 Install
 -------
@@ -23,15 +33,15 @@ Usage
 
 There are three (basically equivalent) options to use `PHPUnitArrayAssertions`:
 
-- By using the static class `PhrozenByte\PHPUnitArrayAsserts\Assert`
-- By using the trait `PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` in your test case
+- By using the static [class `PhrozenByte\PHPUnitArrayAsserts\Assert`](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Assert.php)
+- By using the [trait `PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait`](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/ArrayAssertsTrait.php) in your test case
 - By creating new constraint instances (`PhrozenByte\PHPUnitArrayAsserts\Constraint\…`)
 
 All options do the same, the only difference is that the static class and trait both throw `PHPUnit\Framework\InvalidArgumentException` exceptions for invalid parameters. Creating new constraint instances is useful for advanced assertions, e.g. together with `PHPUnit\Framework\Constraint\LogicalAnd`.
 
 ### Constraint `AssociativeArray`
 
-The `AssociativeArray` constraint asserts that a value is an associative array matching a given structure and that the array's items pass other constraints.
+The [`AssociativeArray` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/AssociativeArray.php) asserts that a value is an associative array matching a given structure and that the array's items pass other constraints.
 
 Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, missing items will fail the constraint (parameter `$allowMissing`, defaults to `false`). Additional items will be ignored by default (parameter `$allowAdditional`, defaults to `true`). If you want the constraint to fail when additional items exist, set this option to `true`, however, please note that this works for native arrays only. The expected keys and constraints to apply, as well as whether missing and/or additional items should fail the constraint, are passed in the constructor.
 
@@ -99,7 +109,7 @@ $this->assertAssociativeArray([
 
 ### Constraint `ArrayHasKeyWith`
 
-The `ArrayHasKeyWith` constraint asserts that an array has a given key and that its value passes another constraint.
+The [`ArrayHasKeyWith` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/ArrayHasKeyWith.php) asserts that an array has a given key and that its value passes another constraint.
 
 Accepts both native arrays and `ArrayAccess` objects. The constraint (parameter `$constraint`) will fail if the key (parameter `$key`) doesn't exist in the array. The item's key and the constraint the value must pass are passed in the constructor.
 
@@ -149,7 +159,7 @@ $this->assertArrayHasKeyWith('answer', $this->identicalTo(42), $data);
 
 ### Constraint `SequentialArray`
 
-The `SequentialArray` constraint asserts that a value is like a sequential array, has a minimum and/or maximum number of items, and that all items pass another constraint.
+The [`SequentialArray` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/SequentialArray.php) asserts that a value is like a sequential array, has a minimum and/or maximum number of items, and that all items pass another constraint.
 
 Sequential arrays are defined as ordered lists with incrementing numeric keys starting from zero. This is especially true for native sequential arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too. `Traversable` objects must have sequential keys to be considered valid. The expected minimum (parameter `$minItems`, defaults to `0`) and/or maximum (parameter `$maxItems`, defaults to `null`, meaning infinite) number of items, and the constraint to apply all items to (optional parameter `$constraint`), are passed in the constructor.
 
@@ -206,7 +216,7 @@ $this->assertSequentialArray($data, 4, null, $this->is(IsType::TYPE_STRING));
 
 ### Constraint `ArrayHasItemWith`
 
-The `ArrayHasItemWith` constraint asserts that an array has a item at a given index and that its value passes another constraint.
+The [`ArrayHasItemWith` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/ArrayHasItemWith.php) asserts that an array has a item at a given index and that its value passes another constraint.
 
 Accepts both native arrays and `Traversable` objects. The constraint will fail if the array has less items than required. The index of the item to check (parameter `$index`), and the constraint its value must pass (parameter `$constraint`) are passed in the constructor.
 
