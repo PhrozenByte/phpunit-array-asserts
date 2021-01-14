@@ -75,7 +75,7 @@ trait ArrayAssertsTrait
         }
 
         if (!is_array($array) && !$allowAdditional) {
-            throw InvalidArgumentException::create(2, 'array when argument #4 is set true');
+            throw InvalidArgumentException::create(2, 'array when argument #4 is set to true');
         }
 
         $constraint = new AssociativeArray($constraints, $allowMissing, $allowAdditional);
@@ -162,7 +162,7 @@ trait ArrayAssertsTrait
         string $message = ''
     ): void {
         if (!(is_array($array) || ($array instanceof Traversable))) {
-            throw InvalidArgumentException::create(3, 'array or Traversable');
+            throw InvalidArgumentException::create(1, 'array or Traversable');
         }
 
         $constraint = new SequentialArray($minItems, $maxItems, $constraint);
