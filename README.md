@@ -5,6 +5,8 @@ PHPUnitArrayAssertions
 
 This PHPUnit extension allows developers to test structure and data in single assertion, making test cases less repetitive and easier to understand. In some way it's an alternative to PHPUnit's `ArraySubset` constraint that was deprecated in PHPUnit 8 and removed in PHPUnit 9 - just way more powerful and less confusing. Refer to the ["Usage" section](#usage) and ["Example" section](#example) below for more info.
 
+You want more PHPUnit constraints? Check out [`PHPUnitThrowableAssertions`](https://github.com/PhrozenByte/phpunit-throwable-asserts)! It introduces the `assertCallableThrows()` and `assertCallableThrowsNot()` assertions to improve testing of exceptions and PHP errors. It's more powerful and flexible than PHPUnit's core `expectException()` and `expectError()` methods.
+
 Made with :heart: by [Daniel Rudolf](https://www.daniel-rudolf.de). `PHPUnitArrayAssertions` is free and open source software, released under the terms of the [MIT license](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/LICENSE).
 
 **Table of contents:**
