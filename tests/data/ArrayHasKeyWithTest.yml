@@ -1,0 +1,157 @@
+# PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+#
+# @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+#
+# This file is copyrighted by the contributors recorded in the version control
+# history of the file, available from the following original location:
+#
+# <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/data/ArrayHasKeyWithTest.yml>
+#
+# @license http://opensource.org/licenses/MIT The MIT License
+#
+# SPDX-License-Identifier: MIT
+# License-Filename: LICENSE
+
+~anchors:
+    paramsKeyTwo: &paramsKeyTwo
+        key: two
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is awesome
+                matches: false
+                count: 0
+    paramsKeyOne: &paramsKeyOne
+        key: one
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is funny
+                matches: false
+                count: 1
+    paramsKeyZero: &paramsKeyZero
+        key: 0
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: matches something
+                matches: false
+                count: 2
+    constraintMatches: &constraintMatches
+        constraint: { options: { matches: true } }
+
+testInvalidParameters:
+    -   key:
+            - "this is no valid key"
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith::__construct()
+            must be an integer or string
+
+testSelfDescribing:
+    -   <<: *paramsKeyTwo
+        expectedDescription: is an array that has the key 'two' whose value is awesome
+    -   <<: *paramsKeyOne
+        expectedDescription: is an array that has the key 'one' whose value is funny
+    -   <<: *paramsKeyZero
+        expectedDescription: is an array that has the key 0 whose value matches something
+
+testEvaluate:
+    -   <<: *paramsKeyTwo
+        <<<: *constraintMatches
+        other:
+            two: [ 1, 2, 3 ]
+            one: [ 4, 5, 6 ]
+            0: [ 7, 8, 9 ]
+        expectedEvaluationValue: [ 1, 2, 3 ]
+    -   <<: *paramsKeyOne
+        <<<: *constraintMatches
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                two: ~
+                one: [ "baz" ]
+                0: [ "foo", "bar" ]
+        expectedEvaluationValue: [ "baz" ]
+    -   <<: *paramsKeyZero
+        <<<: *constraintMatches
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data: [ 1, 2, 3 ]
+        expectedEvaluationValue: 1
+    -   key: 789
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: matches something else
+                matches: true
+        other:
+            123: [ "foo", "bar" ]
+            456: [ "baz" ]
+            789: ~
+        expectedEvaluationValue: ~
+
+testEvaluateFail:
+    -   <<: *paramsKeyTwo
+        other: { "two": 1, "one": 2, 0: 3 }
+        expectedEvaluationValue: 1
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 'two' whose value is awesome.
+    -   <<: *paramsKeyZero
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                two: ~
+                one: [ "baz" ]
+                0: [ "foo", "bar" ]
+        expectedEvaluationValue: [ "foo", "bar" ]
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 0 whose value matches something.
+
+testPreEvaluateFail:
+    -   <<: *paramsKeyTwo
+        other: {}
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 'two' whose value is awesome.
+    -   <<: *paramsKeyOne
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 'one' whose value is funny.
+    -   <<: *paramsKeyZero
+        other: ~
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 0 whose value matches something.
+    -   key: non-existing
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is test data
+                matches: false
+        other: [ 1, 2, 3 ]
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 'non-existing' whose value is test data.
+    -   key: -1
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: matches something else
+                matches: false
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                123: [ "foo", "bar" ]
+                456: [ "baz" ]
+                789: ~
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key -1 whose value matches something else.
+
+testCountable:
+    -   <<: *paramsKeyTwo
+        expectedCount: 1
+    -   <<: *paramsKeyOne
+        expectedCount: 2
+    -   <<: *paramsKeyZero
+        expectedCount: 3

@@ -1,0 +1,263 @@
+# PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+#
+# @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+#
+# This file is copyrighted by the contributors recorded in the version control
+# history of the file, available from the following original location:
+#
+# <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/data/SequentialArrayTest.yml>
+#
+# @license http://opensource.org/licenses/MIT The MIT License
+#
+# SPDX-License-Identifier: MIT
+# License-Filename: LICENSE
+
+~anchors:
+    constraint: &constraint
+        ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+        options:
+            toString: is awesome
+            matches: false
+            count: 2
+    constraintMatch: &constraintMatch
+        <<: *constraint
+        <<<: { options: { matches: true } }
+
+testInvalidParameters:
+    -   minItems: -1
+        maxItems: ~
+        constraint: ~
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
+            must be a non-negative integer
+    -   minItems: 0
+        maxItems: -1
+        constraint: ~
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
+            must be a non-negative integer
+    -   minItems: 2
+        maxItems: 1
+        constraint: ~
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
+            must be an integer not lesser than argument #2
+
+testSelfDescribing:
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        expectedDescription: is a sequential array
+    -   minItems: 1
+        maxItems: ~
+        constraint: ~
+        expectedDescription: is a non-empty sequential array
+    -   minItems: 2
+        maxItems: ~
+        constraint: ~
+        expectedDescription: is a sequential array with ≥ 2 items
+    -   minItems: 3
+        maxItems: ~
+        constraint: ~
+        expectedDescription: is a sequential array with ≥ 3 items
+
+    -   minItems: 0
+        maxItems: 0
+        constraint: ~
+        expectedDescription: is an empty array
+    -   minItems: 0
+        maxItems: 1
+        constraint: ~
+        expectedDescription: is a sequential array with ≤ 1 items
+    -   minItems: 0
+        maxItems: 2
+        constraint: ~
+        expectedDescription: is a sequential array with ≤ 2 items
+    -   minItems: 0
+        maxItems: 3
+        constraint: ~
+        expectedDescription: is a sequential array with ≤ 3 items
+
+    -   minItems: 1
+        maxItems: 1
+        constraint: ~
+        expectedDescription: is a sequential array with exactly 1 item
+    -   minItems: 1
+        maxItems: 2
+        constraint: ~
+        expectedDescription: is a sequential array with ≥ 1 and ≤ 2 items
+    -   minItems: 1
+        maxItems: 3
+        constraint: ~
+        expectedDescription: is a sequential array with ≥ 1 and ≤ 3 items
+    -   minItems: 2
+        maxItems: 2
+        constraint: ~
+        expectedDescription: is a sequential array with exactly 2 items
+    -   minItems: 2
+        maxItems: 3
+        constraint: ~
+        expectedDescription: is a sequential array with ≥ 2 and ≤ 3 items
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraint
+        expectedDescription: is a sequential array whose items match the constraint "is awesome"
+    -   minItems: 1
+        maxItems: ~
+        constraint: *constraint
+        expectedDescription: is a non-empty sequential array whose items match the constraint "is awesome"
+    -   minItems: 2
+        maxItems: ~
+        constraint: *constraint
+        expectedDescription: is a sequential array with ≥ 2 items matching the constraint "is awesome"
+    -   minItems: 0
+        maxItems: 1
+        constraint: *constraint
+        expectedDescription: is a sequential array with ≤ 1 items matching the constraint "is awesome"
+    -   minItems: 1
+        maxItems: 1
+        constraint: *constraint
+        expectedDescription: is a sequential array with exactly 1 item matching the constraint "is awesome"
+    -   minItems: 1
+        maxItems: 2
+        constraint: *constraint
+        expectedDescription: is a sequential array with ≥ 1 and ≤ 2 items matching the constraint "is awesome"
+
+testEvaluate:
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other: []
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: EmptyIterator
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: ArrayIterator
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other: [ 1, 2, 3 ]
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: ArrayIterator
+            array: { 0: "foo", 1: "bar", 2: "baz" }
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\IteratorAggregated
+            iterator:
+                ~object: ArrayIterator
+                array: [ "foo", "bar", "baz" ]
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~generator:
+                start: 0
+                step: 1
+                stop: 10
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraintMatch
+        other: [ 1, 2, 3 ]
+
+testEvaluateFail:
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraint
+        other: [ "foo", "bar", "baz" ]
+        expectedEvaluationCount: 1
+        expectedExceptionMessage: Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraint
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\IteratorAggregated
+            iterator:
+                ~object: ArrayIterator
+                array: [ 1, 2, 3 ]
+        expectedEvaluationCount: 1
+        expectedExceptionMessage: Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
+
+testPreEvaluateFail:
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other: ~
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other: not an array
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other: { foo: 2, bar: 1, baz: 0 }
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: ArrayIterator
+            array: { 2: "foo", 1: "bar", 0: "baz" }
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
+
+    -   minItems: 1
+        maxItems: ~
+        constraint: ~
+        other: []
+        expectedExceptionMessage: Failed asserting that %s is a non-empty sequential array.
+    -   minItems: 2
+        maxItems: ~
+        constraint: ~
+        other:
+            ~object: EmptyIterator
+        expectedExceptionMessage: Failed asserting that %s is a sequential array with ≥ 2 items.
+    -   minItems: 0
+        maxItems: 0
+        constraint: ~
+        other: [ "single value" ]
+        expectedExceptionMessage: Failed asserting that %s is an empty array.
+    -   minItems: 0
+        maxItems: 2
+        constraint: ~
+        other:
+            ~object: ArrayIterator
+            array:
+              [ "foo", "bar", "baz" ]
+        expectedExceptionMessage: Failed asserting that %s is a sequential array with ≤ 2 items.
+    -   minItems: 0
+        maxItems: 3
+        constraint: ~
+        other:
+            ~generator:
+                start: 0
+                step: 1
+                stop: 10
+        expectedExceptionMessage: Failed asserting that %s is a sequential array with ≤ 3 items.
+
+testCountable:
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        expectedCount: 1
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraint
+        expectedCount: 3

@@ -13,3 +13,7 @@ desktop.ini
 # Composer
 /composer.lock
 /vendor
+
+# PHPUnit
+/tests/.phpunit.result.cache
+/tests/clover.xml

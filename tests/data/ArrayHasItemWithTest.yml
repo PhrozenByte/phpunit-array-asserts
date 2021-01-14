@@ -1,0 +1,135 @@
+# PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+#
+# @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+#
+# This file is copyrighted by the contributors recorded in the version control
+# history of the file, available from the following original location:
+#
+# <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/data/ArrayHasItemWithTest.yml>
+#
+# @license http://opensource.org/licenses/MIT The MIT License
+#
+# SPDX-License-Identifier: MIT
+# License-Filename: LICENSE
+
+~anchors:
+    paramsIndexTwo: &paramsIndexTwo
+        index: 2
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is awesome
+                matches: false
+                count: 0
+    paramsIndexOne: &paramsIndexOne
+        index: 1
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is funny
+                matches: false
+                count: 1
+    paramsIndexZero: &paramsIndexZero
+        index: 0
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: matches something
+                matches: false
+                count: 2
+    constraintMatches: &constraintMatches
+        constraint: { options: { matches: true } }
+
+testSelfDescribing:
+    -   <<: *paramsIndexTwo
+        expectedDescription: is an array that has a value at index 2 which is awesome
+    -   <<: *paramsIndexOne
+        expectedDescription: is an array that has a value at index 1 which is funny
+    -   <<: *paramsIndexZero
+        expectedDescription: is an array that has a value at index 0 which matches something
+
+testEvaluate:
+    -   <<: *paramsIndexTwo
+        <<<: *constraintMatches
+        other: [ 1, 2, 3 ]
+        expectedEvaluationValue: 3
+    -   <<: *paramsIndexOne
+        <<<: *constraintMatches
+        other:
+            foo: [ 1, 2, 3 ]
+            bar: [ 4, 5, 6 ]
+            baz: [ 7, 8, 9 ]
+        expectedEvaluationValue: [ 4, 5, 6 ]
+    -   <<: *paramsIndexZero
+        <<<: *constraintMatches
+        other:
+            ~object: ArrayIterator
+            array: { 2: "foo", 1: "bar", 0: "baz" }
+        expectedEvaluationValue: foo
+    -   index: 10
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is test data
+                matches: true
+        other:
+            ~generator: { start: 100, step: 10, stop: 1000 }
+        expectedEvaluationValue: 200
+
+testEvaluateFail:
+    -   <<: *paramsIndexTwo
+        other: [ 1, 2, 3 ]
+        expectedEvaluationValue: 3
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 2 which is awesome.
+    -   <<: *paramsIndexZero
+        other:
+            ~object: ArrayIterator
+            array: { 2: "foo", 1: "bar", 0: "baz" }
+        expectedEvaluationValue: foo
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 0 which matches something.
+
+testPreEvaluateFail:
+    -   <<: *paramsIndexTwo
+        other: []
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 2 which is awesome.
+    -   <<: *paramsIndexOne
+        other:
+            ~object: EmptyIterator
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 1 which is funny.
+    -   <<: *paramsIndexZero
+        other: ~
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 0 which matches something.
+    -   index: -1
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: is test data
+                matches: false
+        other: [ 1, 2, 3 ]
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index -1 which is test data.
+    -   index: 3
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options:
+                toString: matches something else
+                matches: false
+        other:
+            foo: [ 1, 2, 3 ]
+            bar: [ 4, 5, 6 ]
+            baz: [ 7, 8, 9 ]
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 3 which matches something else.
+
+testCountable:
+    -   <<: *paramsIndexTwo
+        expectedCount: 1
+    -   <<: *paramsIndexOne
+        expectedCount: 2
+    -   <<: *paramsIndexZero
+        expectedCount: 3

@@ -1,0 +1,111 @@
+# PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+#
+# @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+#
+# This file is copyrighted by the contributors recorded in the version control
+# history of the file, available from the following original location:
+#
+# <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/data/ArrayAssertsTraitTest.yml>
+#
+# @license http://opensource.org/licenses/MIT The MIT License
+#
+# SPDX-License-Identifier: MIT
+# License-Filename: LICENSE
+
+~anchors:
+    testAssociativeArrayBase: &testAssociativeArrayBase
+        constraints:
+            foo: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+            bar: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+        allowMissing: true
+        allowAdditional: true
+    testArrayHasKeyWithBase: &testArrayHasKeyWithBase
+        key: foo
+        constraint: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+    testSequentialArrayBase: &testSequentialArrayBase
+        minItems: 1
+        maxItems: 3
+        constraint: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+    testArrayHasItemWithBase: &testArrayHasItemWithBase
+        index: 1
+        constraint: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+
+testAssociativeArray:
+    -   <<: *testAssociativeArrayBase
+        array:
+            foo: Hello
+            bar: World
+    -   <<: *testAssociativeArrayBase
+        array:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                foo: Hello
+                bar: World
+
+testAssociativeArrayFail:
+    -   <<: *testAssociativeArrayBase
+        array: this is no array
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Assert::assertAssociativeArray()
+            must be an array or ArrayAccess
+    -   <<: *testAssociativeArrayBase
+        allowAdditional: false
+        array:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Assert::assertAssociativeArray()
+            must be an array when argument #4 is set to true
+
+testArrayHasKeyWith:
+    -   <<: *testArrayHasKeyWithBase
+        array:
+            foo: Hello
+            bar: World
+    -   <<: *testArrayHasKeyWithBase
+        array:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                foo: Hello
+                bar: World
+
+testArrayHasKeyWithFail:
+    -   <<: *testArrayHasKeyWithBase
+        array: this is no array
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #3 of PhrozenByte\PHPUnitArrayAsserts\Assert::assertArrayHasKeyWith()
+            must be an array or ArrayAccess
+
+testSequentialArray:
+    -   <<: *testSequentialArrayBase
+        array: [ "foo", "bar" ]
+    -   <<: *testSequentialArrayBase
+        array:
+            ~object: ArrayIterator
+            array: [ "foo", "bar" ]
+
+testSequentialArrayFail:
+    -   <<: *testSequentialArrayBase
+        array: this is no array
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Assert::assertSequentialArray()
+            must be an array or Traversable
+
+testArrayHasItemWith:
+    -   <<: *testArrayHasItemWithBase
+        array: [ "foo", "bar" ]
+    -   <<: *testArrayHasItemWithBase
+        array:
+            ~object: ArrayIterator
+            array: [ "foo", "bar" ]
+
+testArrayHasItemWithFail:
+    -   <<: *testArrayHasItemWithBase
+        array: this is no array
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #3 of PhrozenByte\PHPUnitArrayAsserts\Assert::assertArrayHasItemWith()
+            must be an array or Traversable

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+  ~
+  ~ @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+  ~
+  ~ This file is copyrighted by the contributors recorded in the version control
+  ~ history of the file, available from the following original location:
+  ~
+  ~ <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/Unit/phpunit.xml>
+  ~
+  ~ @license http://opensource.org/licenses/MIT The MIT License
+  ~
+  ~ SPDX-License-Identifier: MIT
+  ~ License-Filename: LICENSE
+  -->
+
+<phpunit bootstrap="../vendor/autoload.php">
+    <testsuites>
+        <testsuite name="phpunit-array-asserts">
+            <directory>./Unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="clover.xml"/>
+    </logging>
+</phpunit>

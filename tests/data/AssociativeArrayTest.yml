@@ -1,0 +1,342 @@
+# PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+#
+# @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+#
+# This file is copyrighted by the contributors recorded in the version control
+# history of the file, available from the following original location:
+#
+# <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/data/AssociativeArrayTest.yml>
+#
+# @license http://opensource.org/licenses/MIT The MIT License
+#
+# SPDX-License-Identifier: MIT
+# License-Filename: LICENSE
+
+~anchors:
+    paramsDefault: &paramsDefault
+        constraints: {}
+        allowMissing: false
+        allowAdditional: true
+    paramsAllowMissing: &paramsAllowMissing
+        constraints: {}
+        allowMissing: true
+        allowAdditional: true
+    paramsDisallowAdditional: &paramsDisallowAdditional
+        constraints: {}
+        allowMissing: false
+        allowAdditional: false
+    paramsAllowMissingDisallowAdditional: &paramsAllowMissingDisallowAdditional
+        constraints: {}
+        allowMissing: true
+        allowAdditional: false
+
+    constraintsNone: &constraintsNone
+        constraints: {}
+    constraintsSingle: &constraintsSingle
+        constraints:
+            item:
+                ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+                options:
+                    toString: is a test
+                    matches: false
+                    count: 0
+    constraintsMultiple: &constraintsMultiple
+        constraints:
+            item1:
+                ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+                options:
+                    toString: is awesome
+                    matches: false
+                    count: 2
+            item2:
+                ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+                options:
+                    toString: is funny
+                    matches: false
+                    count: 3
+            item3:
+                ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+                options:
+                    toString: matches something
+                    matches: false
+                    count: 4
+
+    constraintsNoneMatch: &constraintsNoneMatch
+        <<: *constraintsNone
+    constraintsSingleMatch: &constraintsSingleMatch
+        <<: *constraintsSingle
+        <<<:
+            constraints:
+                item: { options: { matches: true } }
+    constraintsMultipleMatch: &constraintsMultipleMatch
+        <<: *constraintsMultiple
+        <<<:
+            constraints:
+                item1: { options: { matches: true } }
+                item2: { options: { matches: true } }
+                item3: { options: { matches: true } }
+
+testInvalidParameters:
+    -   constraints:
+            - "this is no constraint"
+        allowMissing: false
+        allowAdditional: true
+        expectedException: PHPUnit\Framework\InvalidArgumentException
+        expectedExceptionMessage: >-
+            Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray::__construct()
+            must be an array of PHPUnit\Framework\Constraint\Constraint
+
+testSelfDescribing:
+    -   <<: [ *constraintsNone, *paramsDefault ]
+        expectedDescription: is an associative array
+    -   <<: [ *constraintsSingle, *paramsDefault ]
+        expectedDescription: >-
+            is an associative array that
+            has the key 'item' whose value is a test, and
+            any other item
+    -   <<: [ *constraintsMultiple, *paramsDefault ]
+        expectedDescription: >-
+            is an associative array that
+            has the key 'item1' whose value is awesome, and
+            has the key 'item2' whose value is funny, and
+            has the key 'item3' whose value matches something, and
+            any other item
+
+    -   <<: [ *constraintsNone, *paramsAllowMissing ]
+        expectedDescription: is an associative array
+    -   <<: [ *constraintsSingle, *paramsAllowMissing ]
+        expectedDescription: >-
+            is an associative array that
+            has the key 'item' whose value is a test, and/or
+            any other item
+    -   <<: [ *constraintsMultiple, *paramsAllowMissing ]
+        expectedDescription: >-
+            is an associative array that
+            has the key 'item1' whose value is awesome, and/or
+            has the key 'item2' whose value is funny, and/or
+            has the key 'item3' whose value matches something, and/or
+            any other item
+
+    -   <<: [ *constraintsNone, *paramsDisallowAdditional ]
+        expectedDescription: is an empty array
+    -   <<: [ *constraintsSingle, *paramsDisallowAdditional ]
+        expectedDescription: >-
+            is an associative array that has just
+            the key 'item' whose value is a test
+    -   <<: [ *constraintsMultiple, *paramsDisallowAdditional ]
+        expectedDescription: >-
+            is an associative array that has just
+            the key 'item1' whose value is awesome, and
+            the key 'item2' whose value is funny, and
+            the key 'item3' whose value matches something
+
+    -   <<: [ *constraintsNone, *paramsAllowMissingDisallowAdditional ]
+        expectedDescription: is an empty array
+    -   <<: [ *constraintsSingle, *paramsAllowMissingDisallowAdditional ]
+        expectedDescription: >-
+            is an associative array that has just
+            the key 'item' whose value is a test
+    -   <<: [ *constraintsMultiple, *paramsAllowMissingDisallowAdditional ]
+        expectedDescription: >-
+            is an associative array that has just
+            the key 'item1' whose value is awesome, and/or
+            the key 'item2' whose value is funny, and/or
+            the key 'item3' whose value matches something
+
+testEvaluate:
+    -   <<: [ *constraintsNoneMatch, *paramsDefault ]
+        other: ~
+        expectedEvaluationValues: {}
+
+    -   <<: [ *constraintsNoneMatch, *paramsDefault ]
+        other: {}
+        expectedEvaluationValues: {}
+    -   <<: [ *constraintsSingleMatch, *paramsDefault ]
+        other:
+            item: foobar
+        expectedEvaluationValues:
+            item: foobar
+    -   <<: [ *constraintsMultipleMatch, *paramsDefault ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                item1: foobar
+                item2: test
+                item3: 42
+        expectedEvaluationValues:
+            item1: foobar
+            item2: test
+            item3: 42
+
+    -   <<: [ *constraintsNoneMatch, *paramsDefault ]
+        other:
+            unknown: still valid
+        expectedEvaluationValues: {}
+            # unknown is missing
+    -   <<: [ *constraintsSingleMatch, *paramsDefault ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                item: foobar
+                unknown: still valid
+        expectedEvaluationValues:
+            item: foobar
+            # unknown is missing
+    -   <<: [ *constraintsMultipleMatch, *paramsDefault ]
+        other:
+            item1: foobar
+            item2: test
+            item3: 42
+            unknown: still valid
+        expectedEvaluationValues:
+            item1: foobar
+            item2: test
+            item3: 42
+            # unknown is missing
+
+    -   <<: [ *constraintsNoneMatch, *paramsAllowMissing ]
+        other: ~
+        expectedEvaluationValues: {}
+    -   <<: [ *constraintsSingleMatch, *paramsAllowMissing ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data: {}
+        expectedEvaluationValues: {}
+    -   <<: [ *constraintsMultipleMatch, *paramsAllowMissing ]
+        other:
+            item2: test
+        expectedEvaluationValues:
+            item2: test
+
+testEvaluateFail:
+    -   <<: [ *constraintsSingle, *paramsDefault ]
+        other:
+            item: foobar
+        expectedEvaluationValues:
+            item: foobar
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +--------+----------+-----------------+
+            | Key    | Value    | Constraint      |
+            +--------+----------+-----------------+
+            | 'item' | 'foobar' | Value is a test |
+            +--------+----------+-----------------+
+            [ ] Allow missing; [x] Allow additional
+    -   <<: [ *constraintsMultiple, *paramsAllowMissing ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                item2: test
+        expectedEvaluationValues:
+            item2: test
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +---------+--------+-------------------------+
+            | Key     | Value  | Constraint              |
+            +---------+--------+-------------------------+
+            | 'item1' |        | Value is awesome        |
+            | 'item2' | 'test' | Value is funny          |
+            | 'item3' |        | Value matches something |
+            +---------+--------+-------------------------+
+            [x] Allow missing; [x] Allow additional
+
+testPreEvaluateFail:
+    -   <<: [ *constraintsSingle, *paramsDefault ]
+        other: ~
+        expectedExceptionMessage: Failed asserting that null is an associative array.
+    -   <<: [ *constraintsSingle, *paramsDefault ]
+        other: not an array
+        expectedExceptionMessage: Failed asserting that 'not an array' is an associative array.
+
+    -   <<: [ *constraintsNone, *paramsDisallowAdditional ]
+        other:
+            unknown: not allowed
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +-----------+---------------+------------+
+            | Key       | Value         | Constraint |
+            +-----------+---------------+------------+
+            | 'unknown' | 'not allowed' |            |
+            +-----------+---------------+------------+
+            [ ] Allow missing; [ ] Allow additional
+    -   <<: [ *constraintsSingle, *paramsDisallowAdditional ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                item: foobar
+                unknown: not allowed
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +--------+----------+-----------------+
+            | Key    | Value    | Constraint      |
+            +--------+----------+-----------------+
+            | 'item' | 'foobar' | Value is a test |
+            +--------+----------+-----------------+
+            [ ] Allow missing; [ ] Allow additional
+    -   <<: [ *constraintsMultiple, *paramsDisallowAdditional ]
+        other:
+            item1: foobar
+            item2: test
+            item3: 42
+            unknown: not allowed
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +-----------+---------------+-------------------------+
+            | Key       | Value         | Constraint              |
+            +-----------+---------------+-------------------------+
+            | 'item1'   | 'foobar'      | Value is awesome        |
+            | 'item2'   | 'test'        | Value is funny          |
+            | 'item3'   | 42            | Value matches something |
+            | 'unknown' | 'not allowed' |                         |
+            +-----------+---------------+-------------------------+
+            [ ] Allow missing; [ ] Allow additional
+
+    -   <<: [ *constraintsSingleMatch, *paramsDefault ]
+        other: {}
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +--------+-------+-----------------+
+            | Key    | Value | Constraint      |
+            +--------+-------+-----------------+
+            | 'item' |       | Value is a test |
+            +--------+-------+-----------------+
+            [ ] Allow missing; [x] Allow additional
+    -   <<: [ *constraintsMultipleMatch, *paramsDefault ]
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
+            data:
+                item2: test
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +---------+--------+-------------------------+
+            | Key     | Value  | Constraint              |
+            +---------+--------+-------------------------+
+            | 'item1' |        | Value is awesome        |
+            | 'item2' | 'test' | Value is funny          |
+            | 'item3' |        | Value matches something |
+            +---------+--------+-------------------------+
+            [ ] Allow missing; [x] Allow additional
+
+    -   <<: [ *constraintsMultipleMatch, *paramsAllowMissingDisallowAdditional ]
+        other:
+            item2: test
+            unknown: not allowed
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +-----------+---------------+-------------------------+
+            | Key       | Value         | Constraint              |
+            +-----------+---------------+-------------------------+
+            | 'item1'   |               | Value is awesome        |
+            | 'item2'   | 'test'        | Value is funny          |
+            | 'item3'   |               | Value matches something |
+            | 'unknown' | 'not allowed' |                         |
+            +-----------+---------------+-------------------------+
+            [x] Allow missing; [ ] Allow additional
+
+testCountable:
+    -   <<: [ *constraintsNone, *paramsDefault ]
+        expectedCount: 1
+    -   <<: [ *constraintsSingle, *paramsDefault ]
+        expectedCount: 1
+    -   <<: [ *constraintsMultiple, *paramsDefault ]
+        expectedCount: 10
