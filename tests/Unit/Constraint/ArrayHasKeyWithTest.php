@@ -46,7 +46,7 @@ class ArrayHasKeyWithTest extends TestCase
         string $expectedException,
         string $expectedExceptionMessage
     ): void {
-        $this->assertCallableThrowsException(static function () use ($key, $constraint) {
+        $this->assertCallableThrows(static function () use ($key, $constraint) {
             new ArrayHasKeyWith($key, $constraint);
         }, $expectedException, $expectedExceptionMessage);
     }
@@ -104,7 +104,7 @@ class ArrayHasKeyWithTest extends TestCase
 
         $itemConstraint = new ArrayHasKeyWith($key, $mockedConstraint);
 
-        $this->assertCallableThrowsNoException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class);
     }
@@ -142,7 +142,7 @@ class ArrayHasKeyWithTest extends TestCase
         $itemConstraint = new ArrayHasKeyWith($key, $mockedConstraint);
 
         $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrowsException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class, $expectedExceptionMessage);
     }
@@ -170,7 +170,7 @@ class ArrayHasKeyWithTest extends TestCase
         $itemConstraint = new ArrayHasKeyWith($key, $mockedConstraint);
 
         $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrowsException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class, $expectedExceptionMessage);
     }

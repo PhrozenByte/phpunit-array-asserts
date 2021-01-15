@@ -49,7 +49,7 @@ class SequentialArrayTest extends TestCase
         string $expectedException,
         string $expectedExceptionMessage
     ): void {
-        $this->assertCallableThrowsException(static function () use ($minItems, $maxItems, $constraint) {
+        $this->assertCallableThrows(static function () use ($minItems, $maxItems, $constraint) {
             new SequentialArray($minItems, $maxItems, $constraint);
         }, $expectedException, $expectedExceptionMessage);
     }
@@ -110,7 +110,7 @@ class SequentialArrayTest extends TestCase
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
-        $this->assertCallableThrowsNoException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class);
     }
@@ -152,7 +152,7 @@ class SequentialArrayTest extends TestCase
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
         $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrowsException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class, $expectedExceptionMessage);
     }
@@ -186,7 +186,7 @@ class SequentialArrayTest extends TestCase
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
         $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrowsException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class, $expectedExceptionMessage);
     }
@@ -216,7 +216,7 @@ class SequentialArrayTest extends TestCase
             }
         };
 
-        $this->assertCallableThrowsNoException(static function () use ($itemConstraint, $other) {
+        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
             $itemConstraint->evaluate($other);
         }, ExpectationFailedException::class);
 
