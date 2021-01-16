@@ -24,6 +24,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray;
 use PhrozenByte\PHPUnitArrayAsserts\Tests\TestCase;
+use PhrozenByte\PHPUnitThrowableAsserts\CallableProxy;
 use SebastianBergmann\Exporter\Exporter;
 
 /**
@@ -110,9 +111,10 @@ class SequentialArrayTest extends TestCase
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
-        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class
+        );
     }
 
     /**
@@ -151,10 +153,11 @@ class SequentialArrayTest extends TestCase
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
-        $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            new CallableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class,
+            sprintf($expectedExceptionMessage, (new Exporter())->export($other))
+        );
     }
 
     /**
@@ -185,10 +188,11 @@ class SequentialArrayTest extends TestCase
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
-        $expectedExceptionMessage = sprintf($expectedExceptionMessage, (new Exporter())->export($other));
-        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class,
+            sprintf($expectedExceptionMessage, (new Exporter())->export($other))
+        );
     }
 
     /**
@@ -216,9 +220,10 @@ class SequentialArrayTest extends TestCase
             }
         };
 
-        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class
+        );
 
         $this->assertTrue($other->valid());
         $this->assertSame(4, $other->current());

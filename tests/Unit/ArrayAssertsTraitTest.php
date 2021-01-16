@@ -32,6 +32,7 @@ use PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith;
 use PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray;
 use PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray;
 use PhrozenByte\PHPUnitArrayAsserts\Tests\TestCase;
+use PhrozenByte\PHPUnitThrowableAsserts\CachedCallableProxy;
 use Traversable;
 
 /**
@@ -68,10 +69,15 @@ class ArrayAssertsTraitTest extends TestCase
             [ $constraints, $allowMissing, $allowAdditional ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($constraints, $allowMissing, $allowAdditional) {
-            $itemConstraint = Assert::associativeArray($constraints, $allowMissing, $allowAdditional);
-            $this->assertInstanceOf(AssociativeArray::class, $itemConstraint);
-        }, InvalidArgumentException::class);
+        $callableProxy = new CachedCallableProxy(
+            [ Assert::class, 'associativeArray' ],
+            $constraints,
+            $allowMissing,
+            $allowAdditional
+        );
+
+        $this->assertCallableThrowsNot($callableProxy, InvalidArgumentException::class);
+        $this->assertInstanceOf(AssociativeArray::class, $callableProxy->getReturnValue());
     }
 
     /**
@@ -94,9 +100,16 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($constraints, $allowMissing, $allowAdditional, $array) {
-            Assert::assertAssociativeArray($constraints, $array, $allowMissing, $allowAdditional);
-        }, InvalidArgumentException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy(
+                [ Assert::class, 'assertAssociativeArray' ],
+                $constraints,
+                $array,
+                $allowMissing,
+                $allowAdditional
+            ),
+            InvalidArgumentException::class
+        );
     }
 
     /**
@@ -131,9 +144,17 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrows(function () use ($constraints, $allowMissing, $allowAdditional, $array) {
-            Assert::assertAssociativeArray($constraints, $array, $allowMissing, $allowAdditional);
-        }, $expectedException, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy(
+                [ Assert::class, 'assertAssociativeArray' ],
+                $constraints,
+                $array,
+                $allowMissing,
+                $allowAdditional
+            ),
+            $expectedException,
+            $expectedExceptionMessage
+        );
     }
 
     /**
@@ -159,10 +180,9 @@ class ArrayAssertsTraitTest extends TestCase
             [ $key, $constraint ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($key, $constraint) {
-            $itemConstraint = Assert::arrayHasKeyWith($key, $constraint);
-            $this->assertInstanceOf(ArrayHasKeyWith::class, $itemConstraint);
-        }, InvalidArgumentException::class);
+        $callableProxy = new CachedCallableProxy([ Assert::class, 'arrayHasKeyWith' ], $key, $constraint);
+        $this->assertCallableThrowsNot($callableProxy, InvalidArgumentException::class);
+        $this->assertInstanceOf(ArrayHasKeyWith::class, $callableProxy->getReturnValue());
     }
 
     /**
@@ -183,9 +203,10 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($key, $constraint, $array) {
-            Assert::assertArrayHasKeyWith($key, $constraint, $array);
-        }, InvalidArgumentException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ Assert::class, 'assertArrayHasKeyWith' ], $key, $constraint, $array),
+            InvalidArgumentException::class
+        );
     }
 
     /**
@@ -218,9 +239,11 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrows(function () use ($key, $constraint, $array) {
-            Assert::assertArrayHasKeyWith($key, $constraint, $array);
-        }, $expectedException, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ Assert::class, 'assertArrayHasKeyWith' ], $key, $constraint, $array),
+            $expectedException,
+            $expectedExceptionMessage
+        );
     }
 
     /**
@@ -248,10 +271,15 @@ class ArrayAssertsTraitTest extends TestCase
             [ $minItems, $maxItems, $constraint ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($minItems, $maxItems, $constraint) {
-            $itemConstraint = Assert::sequentialArray($minItems, $maxItems, $constraint);
-            $this->assertInstanceOf(SequentialArray::class, $itemConstraint);
-        }, InvalidArgumentException::class);
+        $callableProxy = new CachedCallableProxy(
+            [ Assert::class, 'sequentialArray' ],
+            $minItems,
+            $maxItems,
+            $constraint
+        );
+
+        $this->assertCallableThrowsNot($callableProxy, InvalidArgumentException::class);
+        $this->assertInstanceOf(SequentialArray::class, $callableProxy->getReturnValue());
     }
 
     /**
@@ -274,9 +302,10 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($minItems, $maxItems, $constraint, $array) {
-            Assert::assertSequentialArray($array, $minItems, $maxItems, $constraint);
-        }, InvalidArgumentException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, $minItems, $maxItems, $constraint),
+            InvalidArgumentException::class
+        );
     }
 
     /**
@@ -311,9 +340,11 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrows(function () use ($minItems, $maxItems, $constraint, $array) {
-            Assert::assertSequentialArray($array, $minItems, $maxItems, $constraint);
-        }, $expectedException, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, $minItems, $maxItems, $constraint),
+            $expectedException,
+            $expectedExceptionMessage
+        );
     }
 
     /**
@@ -339,10 +370,9 @@ class ArrayAssertsTraitTest extends TestCase
             [ $index, $constraint ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($index, $constraint) {
-            $itemConstraint = Assert::arrayHasItemWith($index, $constraint);
-            $this->assertInstanceOf(ArrayHasItemWith::class, $itemConstraint);
-        }, InvalidArgumentException::class);
+        $callableProxy = new CachedCallableProxy([ Assert::class, 'arrayHasItemWith' ], $index, $constraint);
+        $this->assertCallableThrowsNot($callableProxy, InvalidArgumentException::class);
+        $this->assertInstanceOf(ArrayHasItemWith::class, $callableProxy->getReturnValue());
     }
 
     /**
@@ -363,9 +393,10 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrowsNot(function () use ($index, $constraint, $array) {
-            Assert::assertArrayHasItemWith($index, $constraint, $array);
-        }, InvalidArgumentException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ Assert::class, 'assertArrayHasItemWith' ], $index, $constraint, $array),
+            InvalidArgumentException::class
+        );
     }
 
     /**
@@ -398,9 +429,11 @@ class ArrayAssertsTraitTest extends TestCase
             [ $array, '' ]
         );
 
-        $this->assertCallableThrows(function () use ($index, $constraint, $array) {
-            Assert::assertArrayHasItemWith($index, $constraint, $array);
-        }, $expectedException, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ Assert::class, 'assertArrayHasItemWith' ], $index, $constraint, $array),
+            $expectedException,
+            $expectedExceptionMessage
+        );
     }
 
     /**

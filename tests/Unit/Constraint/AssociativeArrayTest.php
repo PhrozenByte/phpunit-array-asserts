@@ -120,9 +120,10 @@ class AssociativeArrayTest extends TestCase
 
         $itemConstraint = new AssociativeArray($mockedConstraints, $allowMissing, $allowAdditional);
 
-        $this->assertCallableThrowsNot(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class);
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class
+        );
     }
 
     /**
@@ -166,9 +167,11 @@ class AssociativeArrayTest extends TestCase
 
         $itemConstraint = new AssociativeArray($mockedConstraints, $allowMissing, $allowAdditional);
 
-        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class,
+            $expectedExceptionMessage
+        );
     }
 
     /**
@@ -199,9 +202,11 @@ class AssociativeArrayTest extends TestCase
 
         $itemConstraint = new AssociativeArray($mockedConstraints, $allowMissing, $allowAdditional);
 
-        $this->assertCallableThrows(static function () use ($itemConstraint, $other) {
-            $itemConstraint->evaluate($other);
-        }, ExpectationFailedException::class, $expectedExceptionMessage);
+        $this->assertCallableThrows(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class,
+            $expectedExceptionMessage
+        );
     }
 
     /**
