@@ -165,10 +165,7 @@ testEvaluate:
         maxItems: ~
         constraint: ~
         other:
-            ~generator:
-                start: 0
-                step: 1
-                stop: 10
+            ~generator: {}
 
     -   minItems: 0
         maxItems: ~
@@ -246,10 +243,7 @@ testPreEvaluateFail:
         maxItems: 3
         constraint: ~
         other:
-            ~generator:
-                start: 0
-                step: 1
-                stop: 10
+            ~generator: { start: 0, step: 1, stop: 9 }
         expectedExceptionMessage: Failed asserting that %s is a sequential array with ≤ 3 items.
 
 testCountable:

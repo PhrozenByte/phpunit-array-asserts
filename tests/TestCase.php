@@ -168,12 +168,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 if (isset($value['~generator'])) {
                     $options = $value['~generator'];
                     $generator = static function (int $start, int $step, int $stop): Generator {
-                        for ($i = $start; $i < $stop; $i += $step) {
+                        for ($i = $start; $i <= $stop; $i += $step) {
                             yield $i;
                         }
                     };
 
-                    return $generator($options['start'] ?? 10, $options['step'] ?? 1, $options['stop'] ?? 10);
+                    return $generator($options['start'] ?? 0, $options['step'] ?? 1, $options['stop'] ?? 9);
                 }
 
                 if (isset($value['~object'])) {
