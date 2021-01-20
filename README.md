@@ -37,7 +37,7 @@ There are three (basically equivalent) options to use `PHPUnitArrayAssertions`:
 
 - By using the static [class `PhrozenByte\PHPUnitArrayAsserts\Assert`](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Assert.php)
 - By using the [trait `PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait`](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/ArrayAssertsTrait.php) in your test case
-- By creating new constraint instances (`PhrozenByte\PHPUnitArrayAsserts\Constraint\…`)
+- By creating new [constraint instances](https://github.com/PhrozenByte/phpunit-array-asserts/tree/master/src/Constraint) (`PhrozenByte\PHPUnitArrayAsserts\Constraint\…`)
 
 All options do the same, the only difference is that the static class and trait both throw `PHPUnit\Framework\InvalidArgumentException` exceptions for invalid parameters. Creating new constraint instances is useful for advanced assertions, e.g. together with `PHPUnit\Framework\Constraint\LogicalAnd`.
 
@@ -47,11 +47,13 @@ The [`AssociativeArray` constraint](https://github.com/PhrozenByte/phpunit-array
 
 Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, missing items will fail the constraint (parameter `$allowMissing`, defaults to `false`). Additional items will be ignored by default (parameter `$allowAdditional`, defaults to `true`). If you want the constraint to fail when additional items exist, set this option to `true`, however, please note that this works for native arrays only. The expected keys and constraints to apply, as well as whether missing and/or additional items should fail the constraint, are passed in the constructor.
 
+The `ArrayAssertsTrait` trait exposes two public methods for the `AssociativeArray` constraint: Use `ArrayAssertsTrait::assertAssociativeArray()` to perform an assertion, and `ArrayAssertsTrait::associativeArray()` to create a new instance of the `AssociativeArray` constraint.
+
 **Usage:**
 
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
-self::assertAssociativeArray(
+ArrayAssertsTrait::assertAssociativeArray(
     array $constraints,            // an associative array with the expected keys and constraints to apply
     array|ArrayAccess $array,      // the associative array to check
     bool $allowMissing = false,    // whether missing items should fail the constraint
@@ -115,11 +117,13 @@ The [`ArrayHasKeyWith` constraint](https://github.com/PhrozenByte/phpunit-array-
 
 Accepts both native arrays and `ArrayAccess` objects. The constraint (parameter `$constraint`) will fail if the key (parameter `$key`) doesn't exist in the array. The item's key and the constraint the value must pass are passed in the constructor.
 
+The `ArrayAssertsTrait` trait exposes two public methods for the `ArrayHasKeyWith` constraint: Use `ArrayAssertsTrait::assertArrayHasKeyWith()` to perform an assertion, and `ArrayAssertsTrait::arrayHasKeyWith()` to create a new instance of the `ArrayHasKeyWith` constraint.
+
 **Usage:**
 
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
-self::assertArrayHasKeyWith(
+ArrayAssertsTrait::assertArrayHasKeyWith(
     string|int $key,          // the key of the item to check
     Constraint $constraint,   // the constraint the item's value is applied to
     array|ArrayAccess $array, // the array to check
@@ -167,11 +171,13 @@ Sequential arrays are defined as ordered lists with incrementing numeric keys st
 
 This constraint will fully traverse any `Traversable` object given. This also means that any `Generator` will be fully exhausted. If possible, it will try to restore an `Iterator`'s pointer to its previous state.
 
+The `ArrayAssertsTrait` trait exposes two public methods for the `SequentialArray` constraint: Use `ArrayAssertsTrait::assertSequentialArray()` to perform an assertion, and `ArrayAssertsTrait::sequentialArray()` to create a new instance of the `SequentialArray` constraint.
+
 **Usage:**
 
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
-self::assertSequentialArray(
+ArrayAssertsTrait::assertSequentialArray(
     array|Traversable $array,      // the sequential array to check
     int $minItems,                 // required minimum number of items
     int $maxItems = null,          // required maximum number of items (pass null for infinite)
@@ -224,11 +230,13 @@ Accepts both native arrays and `Traversable` objects. The constraint will fail i
 
 This constraint will fully traverse any `Traversable` object given. This also means that any `Generator` will be fully exhausted. It doesn't restore an `Iterator`'s pointer to its previous state.
 
+The `ArrayAssertsTrait` trait exposes two public methods for the `ArrayHasItemWith` constraint: Use `ArrayAssertsTrait::assertArrayHasItemWith()` to perform an assertion, and `ArrayAssertsTrait::arrayHasItemWith()` to create a new instance of the `ArrayHasItemWith` constraint.
+
 **Usage:**
 
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
-self::assertArrayHasItemWith(
+ArrayAssertsTrait::assertArrayHasItemWith(
     int $index,               // the index of the item to check
     Constraint $constraint,   // the constraint the item's value is applied to
     array|Traversable $array, // the array to check
