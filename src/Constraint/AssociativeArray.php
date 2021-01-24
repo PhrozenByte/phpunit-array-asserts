@@ -61,7 +61,7 @@ class AssociativeArray extends Constraint
     public function __construct(array $constraints, bool $allowMissing = false, bool $allowAdditional = true)
     {
         $isNoConstraint = static function ($constraint): bool { return !($constraint instanceof Constraint); };
-        if (!(is_array($constraints) && !array_filter($constraints, $isNoConstraint))) {
+        if (array_filter($constraints, $isNoConstraint)) {
             throw InvalidArgumentException::create(1, sprintf('array of %s', Constraint::class));
         }
 
@@ -167,12 +167,7 @@ class AssociativeArray extends Constraint
         $table->setHeaders([ 'Key', 'Value', 'Constraint' ]);
 
         foreach ($this->constraints as $key => $constraint) {
-            $valueExists = false;
-            if (is_array($other)) {
-                $valueExists = array_key_exists($key, $other);
-            } elseif ($other instanceof ArrayAccess) {
-                $valueExists = $other->offsetExists($key);
-            }
+            $valueExists = is_array($other) ? array_key_exists($key, $other) : $other->offsetExists($key);
 
             $table->addRow([
                 $this->exporter()->export($key),

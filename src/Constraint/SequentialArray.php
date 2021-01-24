@@ -53,7 +53,7 @@ class SequentialArray extends Constraint
     /** @var int|null */
     protected $maxItems;
 
-    /** @var Constraint */
+    /** @var Constraint|null */
     protected $constraint;
 
     /**
@@ -106,7 +106,7 @@ class SequentialArray extends Constraint
                 }
             } elseif ($this->minItems) {
                 $text .= ' with ≥ ' . $this->minItems . ' items';
-            } else {
+            } elseif ($this->maxItems) {
                 $text .= ' with ≤ ' . $this->maxItems . ' items';
             }
 
