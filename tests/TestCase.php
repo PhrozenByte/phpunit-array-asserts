@@ -41,9 +41,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected static $testDataSets = [];
 
     /**
-     * @param Constraint        $constraint
-     * @param InvocationOrder[] $invocationRules
-     * @param mixed[]|null      $evaluateParameters
+     * Mocks a constraint.
+     *
+     * @param Constraint        $constraint         the original constraint
+     * @param InvocationOrder[] $invocationRules    invocation rules for public methods
+     * @param mixed[]|null      $evaluateParameters the expected arguments passed to the `evaluate()` method
      *
      * @return Constraint
      */
@@ -89,9 +91,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $testName
+     * Returns test data sets for a particular test. The test data sets are
+     * stored in YAML files matching the test's class name.
      *
-     * @return array[]
+     * @param string $testName name of the test
+     *
+     * @return array[] test data sets
      */
     protected function getTestDataSets(string $testName): array
     {
@@ -138,9 +143,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $input
+     * Parses a YAML string.
      *
-     * @return mixed
+     * @param string $input YAML string
+     *
+     * @return mixed parsed data
      *
      * @throws YamlParseException
      */
