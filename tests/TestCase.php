@@ -29,6 +29,10 @@ use ReflectionObject;
 use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Abstract TestCase for PHPUnitArrayAsserts unit tests providing helper
+ * methods to mock constraints and to read YAML test data files.
+ */
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     use ThrowableAssertsTrait;
