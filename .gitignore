@@ -15,5 +15,5 @@ desktop.ini
 /vendor
 
 # PHPUnit
-/tests/.phpunit.result.cache
-/tests/clover.xml
+/.phpunit.result.cache
+/clover.xml

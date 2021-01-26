@@ -7,7 +7,7 @@
   ~ This file is copyrighted by the contributors recorded in the version control
   ~ history of the file, available from the following original location:
   ~
-  ~ <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/tests/Unit/phpunit.xml>
+  ~ <https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/phpunit.xml>
   ~
   ~ @license http://opensource.org/licenses/MIT The MIT License
   ~
@@ -15,15 +15,15 @@
   ~ License-Filename: LICENSE
   -->
 
-<phpunit bootstrap="../vendor/autoload.php">
+<phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="phpunit-array-asserts">
-            <directory>./Unit</directory>
+            <directory>./tests/Unit</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">../src</directory>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
     <logging>
