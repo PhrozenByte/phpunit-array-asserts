@@ -29,6 +29,8 @@ use SebastianBergmann\Exporter\Exporter;
  * PHPUnit unit test for the ArrayHasKeyWith constraint.
  *
  * @see ArrayHasKeyWith
+ *
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith
  */
 class ArrayHasKeyWithTest extends TestCase
 {

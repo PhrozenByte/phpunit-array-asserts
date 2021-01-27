@@ -31,6 +31,8 @@ use SebastianBergmann\Exporter\Exporter;
  * PHPUnit unit test for the SequentialArray constraint.
  *
  * @see SequentialArray
+ *
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray
  */
 class SequentialArrayTest extends TestCase
 {

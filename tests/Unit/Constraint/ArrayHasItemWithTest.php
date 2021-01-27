@@ -29,6 +29,8 @@ use SebastianBergmann\Exporter\Exporter;
  * PHPUnit unit test for the ArrayHasItemWith constraint.
  *
  * @see ArrayHasItemWith
+ *
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasItemWith
  */
 class ArrayHasItemWithTest extends TestCase
 {

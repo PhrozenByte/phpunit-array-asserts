@@ -29,6 +29,8 @@ use PhrozenByte\PHPUnitArrayAsserts\Tests\TestCase;
  * PHPUnit unit test for the AssociativeArray constraint.
  *
  * @see AssociativeArray
+ *
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray
  */
 class AssociativeArrayTest extends TestCase
 {

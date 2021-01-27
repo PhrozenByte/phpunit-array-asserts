@@ -45,6 +45,9 @@ use Traversable;
  * @see ArrayAssertsTrait
  * @see Assert
  *
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait
+ * @covers \PhrozenByte\PHPUnitArrayAsserts\Assert
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
