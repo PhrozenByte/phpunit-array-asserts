@@ -48,7 +48,7 @@ class TestConstraint extends Constraint
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function toString(): string
     {
@@ -56,7 +56,7 @@ class TestConstraint extends Constraint
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function matches($other): bool
     {
@@ -64,7 +64,7 @@ class TestConstraint extends Constraint
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function count(): int
     {

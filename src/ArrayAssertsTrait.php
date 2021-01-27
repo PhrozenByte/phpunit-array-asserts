@@ -37,14 +37,14 @@ use Traversable;
  * This trait implements an assertion method and constraint creation method per
  * implemented constraint, namely
  *
- * - the `assertAssociativeArray` and `associativeArray` methods for
- *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray},
- * - the `assertArrayHasKeyWith` and `arrayHasKeyWith` methods for
- *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith},
- * - the `assertSequentialArray` and `sequentialArray` methods for
- *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray}, and
- * - the `assertArrayHasItemWith` and `arrayHasItemWith` methods for
- *   {@class PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasItemWith}.
+ * - the `assertAssociativeArray()` and `associativeArray()` methods for
+ *   {@see AssociativeArray},
+ * - the `assertArrayHasKeyWith()` and `arrayHasKeyWith()` methods for
+ *   {@see ArrayHasKeyWith},
+ * - the `assertSequentialArray()` and `sequentialArray()` methods for
+ *   {@see SequentialArray}, and
+ * - the `assertArrayHasItemWith()` and `arrayHasItemWith()` methods for
+ *   {@see ArrayHasItemWith}.
  */
 trait ArrayAssertsTrait
 {

@@ -85,7 +85,9 @@ class SequentialArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a human-readable string representation of this Constraint.
+     *
+     * @return string string representation of the Constraint
      */
     public function toString(): string
     {
@@ -121,7 +123,11 @@ class SequentialArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns whether the given value matches the Constraint.
+     *
+     * @param mixed $other the value to evaluate
+     *
+     * @return bool boolean indicating whether the value matches the Constraint
      */
     protected function matches($other): bool
     {
@@ -250,7 +256,7 @@ class SequentialArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the number of assertions performed by this Constraint.
      */
     public function count(): int
     {

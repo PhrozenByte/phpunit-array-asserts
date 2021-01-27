@@ -43,7 +43,7 @@ final class IteratorAggregated implements IteratorAggregate
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getIterator(): Traversable
     {

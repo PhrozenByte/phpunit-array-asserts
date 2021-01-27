@@ -40,7 +40,7 @@ final class ArrayAccessible implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetExists($offset): bool
     {
@@ -48,7 +48,7 @@ final class ArrayAccessible implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetGet($offset)
     {
@@ -56,7 +56,7 @@ final class ArrayAccessible implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value): void
     {
@@ -64,7 +64,7 @@ final class ArrayAccessible implements ArrayAccess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetUnset($offset): void
     {

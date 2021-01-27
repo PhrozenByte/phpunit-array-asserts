@@ -71,7 +71,9 @@ class AssociativeArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a human-readable string representation of this Constraint.
+     *
+     * @return string string representation of the Constraint
      */
     public function toString(): string
     {
@@ -105,7 +107,11 @@ class AssociativeArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns whether the given value matches the Constraint.
+     *
+     * @param mixed $other the value to evaluate
+     *
+     * @return bool boolean indicating whether the value matches the Constraint
      */
     protected function matches($other): bool
     {
@@ -130,7 +136,7 @@ class AssociativeArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the number of assertions performed by this Constraint.
      */
     public function count(): int
     {
@@ -143,7 +149,14 @@ class AssociativeArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the description of the failure.
+     *
+     * The beginning of failure messages is "Failed asserting that" in most
+     * cases. This method should return the second part of that sentence.
+     *
+     * @param mixed $other evaluated value
+     *
+     * @return string the failure description
      */
     protected function failureDescription($other): string
     {
@@ -155,7 +168,11 @@ class AssociativeArray extends Constraint
     }
 
     /**
-     * {@inheritDoc}
+     * Returns additional failure description.
+     *
+     * @param mixed $other the evaluated value
+     *
+     * @return string the failure description
      */
     protected function additionalFailureDescription($other): string
     {
