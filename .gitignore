@@ -17,3 +17,7 @@ desktop.ini
 # PHPUnit
 /.phpunit.result.cache
 /clover.xml
+
+# phpDocumentor
+/.phpdoc
+/docs

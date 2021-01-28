@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ PHPUnitArrayAssertions - Array-related PHPUnit assertions for API testing.
+  ~
+  ~ @copyright Copyright (c) 2021, Daniel Rudolf (<https://www.daniel-rudolf.de>)
+  ~
+  ~ This file is copyrighted by the contributors recorded in the version control
+  ~ history of the file, available from the following original location:
+  ~
+  ~ <https://github.com/PhrozenByte/phpunit-throwable-asserts/blob/master/phpdoc.xml>
+  ~
+  ~ @license http://opensource.org/licenses/MIT The MIT License
+  ~
+  ~ SPDX-License-Identifier: MIT
+  ~ License-Filename: LICENSE
+  -->
+
+<phpdocumentor
+    configVersion="3"
+    xmlns="https://www.phpdoc.org"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+>
+    <title>PHPUnitThrowableAssertions</title>
+    <paths>
+        <output>./docs</output>
+    </paths>
+    <version number="3.0.0">
+        <api>
+            <source dsn=".">
+                <path>./src</path>
+            </source>
+            <visibility>public</visibility>
+            <ignore hidden="true" symlinks="true">
+                <path>./tests/**/*</path>
+                <path>./vendor/**/*</path>
+            </ignore>
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+        </api>
+    </version>
+</phpdocumentor>
