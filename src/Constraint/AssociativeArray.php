@@ -210,6 +210,6 @@ class AssociativeArray extends Constraint
             $this->allowAdditional ? 'x' : ' '
         );
 
-        return $output;
+        return strtr($output, [ "\r\n" => "\n" ]);
     }
 }
