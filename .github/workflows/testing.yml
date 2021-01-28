@@ -1,0 +1,44 @@
+name: Testing
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    run:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                operating-system: [ 'ubuntu-latest', 'windows-latest', 'macos-latest' ]
+                php-version: [ '7.2', '7.3', '7.4', '8.0' ]
+                include:
+                    -   operating-system: ubuntu-latest
+                        php-version: '7.2'
+            fail-fast: false
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php-version }}
+                    coverage: xdebug
+
+            -   name: Validate composer.json and composer.lock
+                run: composer validate
+
+            -   name: Install dependencies
+                run: composer update --prefer-dist --no-progress
+
+            -   name: Run Psalm static code analysis
+                run: ./vendor/bin/psalm
+
+            -   name: Run PHPUnit test suite
+                run: ./vendor/bin/phpunit
+
+            -   name: Check code coverage
+                run: ./vendor/bin/coverage clover.xml 100
+                if: matrix.php-version != '8.0'
