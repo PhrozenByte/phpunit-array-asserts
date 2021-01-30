@@ -22,6 +22,7 @@ namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 use ArrayAccess;
 use LucidFrame\Console\ConsoleTable;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\InvalidArgumentException;
 
 /**
@@ -35,7 +36,9 @@ use PHPUnit\Framework\InvalidArgumentException;
  *
  * The expected keys and constraints to apply, as well as whether additional
  * and/or missing items should fail the constraint, are passed in the
- * constructor.
+ * constructor. Constraints can either be arbitrary `Constraint` instances
+ * (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value,
+ * requiring exact matches of the values.
  */
 class AssociativeArray extends Constraint
 {
@@ -51,21 +54,23 @@ class AssociativeArray extends Constraint
     /**
      * AssociativeArray constructor.
      *
-     * @param Constraint[] $constraints     an associative array with the expected keys and constraints to apply
-     * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
-     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
-     *                                      this option works for native arrays only
+     * @param Constraint[]|mixed[] $constraints     an array with the expected keys and constraints to apply
+     * @param bool                 $allowMissing    whether missing items fail the constraint (defaults to FALSE)
+     * @param bool                 $allowAdditional whether additional items fail the constraint (defaults to TRUE);
+     *                                              this option works for native arrays only
      *
      * @throws InvalidArgumentException
      */
     public function __construct(array $constraints, bool $allowMissing = false, bool $allowAdditional = true)
     {
-        $isNoConstraint = static function ($constraint): bool { return !($constraint instanceof Constraint); };
-        if (array_filter($constraints, $isNoConstraint)) {
-            throw InvalidArgumentException::create(1, sprintf('array of %s', Constraint::class));
+        foreach ($constraints as $key => $constraint) {
+            if (!($constraint instanceof Constraint)) {
+                $constraint = new IsEqual($constraint);
+            }
+
+            $this->constraints[$key] = $constraint;
         }
 
-        $this->constraints = $constraints;
         $this->allowMissing = $allowMissing;
         $this->allowAdditional = $allowAdditional;
     }

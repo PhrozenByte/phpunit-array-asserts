@@ -43,17 +43,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Mocks a constraint.
      *
-     * @param Constraint        $constraint         the original constraint
+     * @param Constraint|mixed  $constraint         the original constraint
      * @param InvocationOrder[] $invocationRules    invocation rules for public methods
      * @param mixed[]|null      $evaluateParameters the expected arguments passed to the `evaluate()` method
      *
-     * @return Constraint
+     * @return Constraint|mixed
      */
     protected function mockConstraint(
-        Constraint $constraint,
+        $constraint,
         array $invocationRules = [],
         array $evaluateParameters = null
-    ): Constraint {
+    ) {
+        if (!($constraint instanceof Constraint)) {
+            return $constraint;
+        }
+
         /** @var Constraint|MockObject $mockedConstraint */
         $mockedConstraint = $this->getMockBuilder(get_class($constraint))
             ->disableOriginalConstructor()

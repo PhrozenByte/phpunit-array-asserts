@@ -52,12 +52,12 @@ trait ArrayAssertsTrait
      * Asserts that a value is an associative array matching a given structure
      * and that the array's items pass other constraints.
      *
-     * @param Constraint[]      $constraints     an associative array with the expected keys and constraints to apply
-     * @param array|ArrayAccess $array           the associative array to check
-     * @param bool              $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
-     * @param bool              $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
-     *                                           this option works for native arrays only
-     * @param string            $message         additional information about the test
+     * @param Constraint[]|mixed[] $constraints     an array with the expected keys and constraints to apply
+     * @param array|ArrayAccess    $array           the associative array to check
+     * @param bool                 $allowMissing    whether missing items fail the constraint (defaults to FALSE)
+     * @param bool                 $allowAdditional whether additional items fail the constraint (defaults to TRUE);
+     *                                              this option works for native arrays only
+     * @param string               $message         additional information about the test
      *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
@@ -85,10 +85,10 @@ trait ArrayAssertsTrait
     /**
      * Returns a new instance of the AssociativeArray constraint.
      *
-     * @param Constraint[] $constraints     an associative array with the expected keys and constraints to apply
-     * @param bool         $allowMissing    whether missing items should fail the constraint (defaults to FALSE)
-     * @param bool         $allowAdditional whether additional items should fail the constraint (defaults to TRUE);
-     *                                      this option works for native arrays only
+     * @param Constraint[]|mixed[] $constraints     an array with the expected keys and constraints to apply
+     * @param bool                 $allowMissing    whether missing items fail the constraint (defaults to FALSE)
+     * @param bool                 $allowAdditional whether additional items fail the constraint (defaults to TRUE);
+     *                                              this option works for native arrays only
      *
      * @return AssociativeArray
      *

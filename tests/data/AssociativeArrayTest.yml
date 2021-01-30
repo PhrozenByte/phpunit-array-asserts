@@ -60,6 +60,9 @@
                     toString: matches something
                     matches: false
                     count: 4
+    constraintsStatic: &constraintsStatic
+        constraints:
+            item: static value
 
     constraintsNoneMatch: &constraintsNoneMatch
         <<: *constraintsNone
@@ -75,16 +78,6 @@
                 item1: { options: { matches: true } }
                 item2: { options: { matches: true } }
                 item3: { options: { matches: true } }
-
-testInvalidParameters:
-    -   constraints:
-            - "this is no constraint"
-        allowMissing: false
-        allowAdditional: true
-        expectedException: PHPUnit\Framework\InvalidArgumentException
-        expectedExceptionMessage: >-
-            Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Constraint\AssociativeArray::__construct()
-            must be an array of PHPUnit\Framework\Constraint\Constraint
 
 testSelfDescribing:
     -   <<: [ *constraintsNone, *paramsDefault ]
@@ -143,10 +136,21 @@ testSelfDescribing:
             the key 'item2' whose value is funny, and/or
             the key 'item3' whose value matches something
 
+    -   <<: [ *constraintsStatic, *paramsDefault ]
+        expectedDescription: >-
+            is an associative array that
+            has the key 'item' whose value is equal to 'static value', and
+            any other item
+
 testEvaluate:
     -   <<: [ *constraintsNoneMatch, *paramsDefault ]
         other: ~
         expectedEvaluationValues: {}
+    -   <<: [ *constraintsStatic, *paramsDefault ]
+        other:
+            item: static value
+        expectedEvaluationValues:
+            item: static value
 
     -   <<: [ *constraintsNoneMatch, *paramsDefault ]
         other: {}
@@ -239,6 +243,19 @@ testEvaluateFail:
             | 'item3' |        | Value matches something |
             +---------+--------+-------------------------+
             [x] Allow missing; [x] Allow additional
+    -   <<: [ *constraintsStatic, *paramsDefault ]
+        other:
+            item: other value
+        expectedEvaluationValues:
+            item: other value
+        expectedExceptionMessage: |
+            Failed asserting that associative array matches constraints.
+            +--------+---------------+----------------------------------+
+            | Key    | Value         | Constraint                       |
+            +--------+---------------+----------------------------------+
+            | 'item' | 'other value' | Value is equal to 'static value' |
+            +--------+---------------+----------------------------------+
+            [ ] Allow missing; [x] Allow additional
 
 testPreEvaluateFail:
     -   <<: [ *constraintsSingle, *paramsDefault ]
@@ -340,3 +357,5 @@ testCountable:
         expectedCount: 1
     -   <<: [ *constraintsMultiple, *paramsDefault ]
         expectedCount: 10
+    -   <<: [ *constraintsStatic, *paramsDefault ]
+        expectedCount: 2

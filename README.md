@@ -48,7 +48,7 @@ All options do the same, the only difference is that the static class and trait 
 
 The [`AssociativeArray` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/AssociativeArray.php) asserts that a value is an associative array matching a given structure and that the array's items pass other constraints.
 
-Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, missing items will fail the constraint (parameter `$allowMissing`, defaults to `false`). Additional items will be ignored by default (parameter `$allowAdditional`, defaults to `true`). If you want the constraint to fail when additional items exist, set this option to `true`, however, please note that this works for native arrays only. The expected keys and constraints to apply, as well as whether missing and/or additional items should fail the constraint, are passed in the constructor.
+Any native array and `ArrayAccess` object is considered an associative array, no matter which keys they use. However, the array's items are applied to the matching constraint (parameter `$consotraints`). By default, missing items will fail the constraint (parameter `$allowMissing`, defaults to `false`). Additional items will be ignored by default (parameter `$allowAdditional`, defaults to `true`). If you want the constraint to fail when additional items exist, set this option to `true`, however, please note that this works for native arrays only. The expected keys and constraints to apply, as well as whether missing and/or additional items should fail the constraint, are passed in the constructor. Constraints can either be arbitrary `Constraint` instances (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring exact matches of the values.
 
 The `ArrayAssertsTrait` trait exposes two public methods for the `AssociativeArray` constraint: Use `ArrayAssertsTrait::assertAssociativeArray()` to perform an assertion, and `ArrayAssertsTrait::associativeArray()` to create a new instance of the `AssociativeArray` constraint.
 
@@ -57,10 +57,10 @@ The `ArrayAssertsTrait` trait exposes two public methods for the `AssociativeArr
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
 ArrayAssertsTrait::assertAssociativeArray(
-    array $constraints,            // an associative array with the expected keys and constraints to apply
+    array $constraints,            // an array with the expected keys and constraints to apply
     array|ArrayAccess $array,      // the associative array to check
-    bool $allowMissing = false,    // whether missing items should fail the constraint
-    bool $allowAdditional = true,  // whether additional items should fail the constraint
+    bool $allowMissing = false,    // whether missing items fail the constraint
+    bool $allowAdditional = true,  // whether additional items fail the constraint
     string $message = ''           // additional information about the test
 );
 
@@ -87,7 +87,7 @@ $data = [
 //     - "options" with another associative array with the key "panic", whose value must be a boolean
 $this->assertAssociativeArray([
     'id'      => $this->isType(IsType::TYPE_INT),
-    'name'    => $this->identicalTo('Arthur Dent'),
+    'name'    => 'Arthur Dent',
     'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ], true)
 ], $data);
 ```
@@ -100,17 +100,17 @@ $data = [
 ];
 
 $this->assertAssociativeArray([
-    'answer' => $this->identicalTo(42)
+    'answer' => 42
 ], $data);
 
 // Will fail with the following message:
 //
 //     Failed asserting that associative array matches constraints.
-//     +----------+-------+--------------------------+
-//     | Key      | Value | Constraint               |
-//     +----------+-------+--------------------------+
-//     | 'answer' | 21    | Value is identical to 42 |
-//     +----------+-------+--------------------------+
+//     +----------+-------+----------------------+
+//     | Key      | Value | Constraint           |
+//     +----------+-------+----------------------+
+//     | 'answer' | 21    | Value is equal to 42 |
+//     +----------+-------+----------------------+
 //     [ ] Allow missing; [x] Allow additional
 ```
 
@@ -321,7 +321,7 @@ class MyTest extends TestCase
 
         $this->assertAssociativeArray([
             'id'      => $this->isType(IsType::TYPE_INT),
-            'name'    => $this->identicalTo('Arthur Dent'),
+            'name'    => 'Arthur Dent',
             'options' => $this->associativeArray([ 'panic' => $this->isType(IsType::TYPE_BOOL) ])
         ], $responseData['users'][0]);
     }

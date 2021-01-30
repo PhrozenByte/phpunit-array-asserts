@@ -35,41 +35,12 @@ use PhrozenByte\PHPUnitArrayAsserts\Tests\TestCase;
 class AssociativeArrayTest extends TestCase
 {
     /**
-     * @dataProvider dataProviderInvalidParameters
-     *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param string       $expectedException
-     * @param string       $expectedExceptionMessage
-     */
-    public function testInvalidParameters(
-        array $constraints,
-        bool $allowMissing,
-        bool $allowAdditional,
-        string $expectedException,
-        string $expectedExceptionMessage
-    ): void {
-        $this->assertCallableThrows(static function () use ($constraints, $allowMissing, $allowAdditional) {
-            new AssociativeArray($constraints, $allowMissing, $allowAdditional);
-        }, $expectedException, $expectedExceptionMessage);
-    }
-
-    /**
-     * @return array[]
-     */
-    public function dataProviderInvalidParameters(): array
-    {
-        return $this->getTestDataSets('testInvalidParameters');
-    }
-
-    /**
      * @dataProvider dataProviderSelfDescribing
      *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param string       $expectedDescription
+     * @param Constraint[]|mixed[] $constraints
+     * @param bool                 $allowMissing
+     * @param bool                 $allowAdditional
+     * @param string               $expectedDescription
      */
     public function testSelfDescribing(
         array $constraints,
@@ -94,11 +65,11 @@ class AssociativeArrayTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluate
      *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param mixed        $other
-     * @param mixed[]      $expectedEvaluationValues
+     * @param Constraint[]|mixed[] $constraints
+     * @param bool                 $allowMissing
+     * @param bool                 $allowAdditional
+     * @param mixed                $other
+     * @param mixed[]              $expectedEvaluationValues
      */
     public function testEvaluate(
         array $constraints,
@@ -139,12 +110,12 @@ class AssociativeArrayTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluateFail
      *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param mixed        $other
-     * @param mixed[]      $expectedEvaluationValues
-     * @param string       $expectedExceptionMessage
+     * @param Constraint[]|mixed[] $constraints
+     * @param bool                 $allowMissing
+     * @param bool                 $allowAdditional
+     * @param mixed                $other
+     * @param mixed[]              $expectedEvaluationValues
+     * @param string               $expectedExceptionMessage
      */
     public function testEvaluateFail(
         array $constraints,
@@ -187,11 +158,11 @@ class AssociativeArrayTest extends TestCase
     /**
      * @dataProvider dataProviderPreEvaluateFail
      *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param mixed        $other
-     * @param string       $expectedExceptionMessage
+     * @param Constraint[]|mixed[] $constraints
+     * @param bool                 $allowMissing
+     * @param bool                 $allowAdditional
+     * @param mixed                $other
+     * @param string               $expectedExceptionMessage
      */
     public function testPreEvaluateFail(
         array $constraints,
@@ -222,10 +193,10 @@ class AssociativeArrayTest extends TestCase
     /**
      * @dataProvider dataProviderCountable
      *
-     * @param Constraint[] $constraints
-     * @param bool         $allowMissing
-     * @param bool         $allowAdditional
-     * @param int          $expectedCount
+     * @param Constraint[]|mixed[] $constraints
+     * @param bool                 $allowMissing
+     * @param bool                 $allowAdditional
+     * @param int                  $expectedCount
      */
     public function testCountable(
         array $constraints,
@@ -248,9 +219,9 @@ class AssociativeArrayTest extends TestCase
     }
 
     /**
-     * @param Constraint[]      $constraints
-     * @param InvocationOrder[] $invocationRules
-     * @param mixed[][]         $evaluateParameters
+     * @param Constraint[]|mixed[] $constraints
+     * @param InvocationOrder[]    $invocationRules
+     * @param mixed[][]            $evaluateParameters
      *
      * @return Constraint[]
      */
