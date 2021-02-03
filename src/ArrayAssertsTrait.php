@@ -144,11 +144,11 @@ trait ArrayAssertsTrait
      * Asserts that a value is like a sequential array, has a minimum and/or
      * maximum number of items, and that all items pass another constraint.
      *
-     * @param array|Traversable $array      the sequential array to check
-     * @param int               $minItems   required minimum number of items, defaults to 0
-     * @param int|null          $maxItems   required maximum number of items, defaults to NULL (infinite)
-     * @param Constraint|null   $constraint optional constraint to apply all items to (defaults to NULL)
-     * @param string            $message    additional information about the test
+     * @param array|Traversable     $array      the sequential array to check
+     * @param int                   $minItems   required minimum number of items, defaults to 0
+     * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
+     * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param string                $message    additional information about the test
      *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
@@ -158,33 +158,30 @@ trait ArrayAssertsTrait
         $array,
         int $minItems,
         int $maxItems = null,
-        Constraint $constraint = null,
+        $constraint = null,
         string $message = ''
     ): void {
         if (!(is_array($array) || ($array instanceof Traversable))) {
             throw InvalidArgumentException::create(1, 'array or Traversable');
         }
 
-        $constraint = new SequentialArray($minItems, $maxItems, $constraint);
-        PHPUnitAssert::assertThat($array, $constraint, $message);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $constraint);
+        PHPUnitAssert::assertThat($array, $itemConstraint, $message);
     }
 
     /**
      * Returns a new instance of the SequentialArray constraint.
      *
-     * @param int             $minItems   required minimum number of items, defaults to 0
-     * @param int|null        $maxItems   required maximum number of items, defaults to NULL (infinite)
-     * @param Constraint|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param int                   $minItems   required minimum number of items, defaults to 0
+     * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
+     * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
      *
      * @return SequentialArray
      *
      * @throws InvalidArgumentException
      */
-    public static function sequentialArray(
-        int $minItems,
-        int $maxItems = null,
-        Constraint $constraint = null
-    ): SequentialArray {
+    public static function sequentialArray(int $minItems, int $maxItems = null, $constraint = null): SequentialArray
+    {
         return new SequentialArray($minItems, $maxItems, $constraint);
     }
 

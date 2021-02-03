@@ -170,7 +170,7 @@ $this->assertArrayHasKeyWith('answer', 42, $data);
 
 The [`SequentialArray` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/SequentialArray.php) asserts that a value is like a sequential array, has a minimum and/or maximum number of items, and that all items pass another constraint.
 
-Sequential arrays are defined as ordered lists with incrementing numeric keys starting from zero. This is especially true for native sequential arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too. `Traversable` objects must have sequential keys to be considered valid. The expected minimum (parameter `$minItems`, defaults to `0`) and/or maximum (parameter `$maxItems`, defaults to `null`, meaning infinite) number of items, and the constraint to apply all items to (optional parameter `$constraint`), are passed in the constructor.
+Sequential arrays are defined as ordered lists with incrementing numeric keys starting from zero. This is especially true for native sequential arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too. `Traversable` objects must have sequential keys to be considered valid. The expected minimum (parameter `$minItems`, defaults to `0`) and/or maximum (parameter `$maxItems`, defaults to `null`, meaning infinite) number of items, and the constraint to apply all items to (optional parameter `$constraint`), are passed in the constructor. The constraint can either be an arbitrary `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring an exact match of the value.
 
 This constraint will fully traverse any `Traversable` object given. This also means that any `Generator` will be fully exhausted. If possible, it will try to restore an `Iterator`'s pointer to its previous state.
 
@@ -181,18 +181,18 @@ The `ArrayAssertsTrait` trait exposes two public methods for the `SequentialArra
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
 ArrayAssertsTrait::assertSequentialArray(
-    array|Traversable $array,      // the sequential array to check
-    int $minItems,                 // required minimum number of items
-    int $maxItems = null,          // required maximum number of items (pass null for infinite)
-    Constraint $constraint = null, // optional constraint to apply all items to
-    string $message = ''           // additional information about the test
+    array|Traversable $array,            // the sequential array to check
+    int $minItems,                       // required minimum number of items
+    int $maxItems = null,                // required maximum number of items (pass null for infinite)
+    Constraint|mixed $constraint = null, // optional constraint to apply all items to
+    string $message = ''                 // additional information about the test
 );
 
 // using new instance of `\PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray`
 new SequentialArray(
     int $minItems = 0,
     int $maxItems = null,
-    Constraint $constraint = null
+    Constraint|mixed $constraint = null
 );
 ```
 

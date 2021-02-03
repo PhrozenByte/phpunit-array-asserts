@@ -39,16 +39,16 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderInvalidParameters
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param string          $expectedException
-     * @param string          $expectedExceptionMessage
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param string                $expectedException
+     * @param string                $expectedExceptionMessage
      */
     public function testInvalidParameters(
         int $minItems,
         ?int $maxItems,
-        ?Constraint $constraint,
+        $constraint,
         string $expectedException,
         string $expectedExceptionMessage
     ): void {
@@ -68,18 +68,17 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderSelfDescribing
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param string          $expectedDescription
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param string                $expectedDescription
      */
-    public function testSelfDescribing(
-        int $minItems,
-        ?int $maxItems,
-        ?Constraint $constraint,
-        string $expectedDescription
-    ): void {
-        $mockedConstraint = $constraint ? $this->mockConstraint($constraint, [ 'toString' => $this->once() ]) : null;
+    public function testSelfDescribing(int $minItems, ?int $maxItems, $constraint, string $expectedDescription): void
+    {
+        $mockedConstraint = null;
+        if ($constraint !== null) {
+            $mockedConstraint = $this->mockConstraint($constraint, [ 'toString' => $this->once() ]);
+        }
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
         $this->assertSame($expectedDescription, $itemConstraint->toString());
@@ -96,12 +95,12 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluate
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param mixed           $other
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param mixed                 $other
      */
-    public function testEvaluate(int $minItems, ?int $maxItems, ?Constraint $constraint, $other): void
+    public function testEvaluate(int $minItems, ?int $maxItems, $constraint, $other): void
     {
         $mockedConstraint = null;
         if ($constraint !== null) {
@@ -130,17 +129,17 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluateFail
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param mixed           $other
-     * @param int             $expectedEvaluationCount
-     * @param string          $expectedExceptionMessage
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param mixed                 $other
+     * @param int                   $expectedEvaluationCount
+     * @param string                $expectedExceptionMessage
      */
     public function testEvaluateFail(
         int $minItems,
         ?int $maxItems,
-        ?Constraint $constraint,
+        $constraint,
         $other,
         int $expectedEvaluationCount,
         string $expectedExceptionMessage
@@ -173,20 +172,20 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderPreEvaluateFail
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param mixed           $other
-     * @param string          $expectedExceptionMessage
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param mixed                 $other
+     * @param string                $expectedExceptionMessage
      */
     public function testPreEvaluateFail(
         int $minItems,
         ?int $maxItems,
-        ?Constraint $constraint,
+        $constraint,
         $other,
         string $expectedExceptionMessage
     ): void {
-        $mockedConstraint = $constraint ? $this->mockConstraint($constraint) : null;
+        $mockedConstraint = ($constraint !== null) ? $this->mockConstraint($constraint) : null;
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
 
@@ -234,18 +233,21 @@ class SequentialArrayTest extends TestCase
     /**
      * @dataProvider dataProviderCountable
      *
-     * @param int             $minItems
-     * @param int|null        $maxItems
-     * @param Constraint|null $constraint
-     * @param int             $expectedCount
+     * @param int                   $minItems
+     * @param int|null              $maxItems
+     * @param Constraint|mixed|null $constraint
+     * @param int                   $expectedCount
      */
     public function testCountable(
         int $minItems,
         ?int $maxItems,
-        ?Constraint $constraint,
+        $constraint,
         int $expectedCount
     ): void {
-        $mockedConstraint = $constraint ? $this->mockConstraint($constraint, [ 'count' => $this->once() ]) : null;
+        $mockedConstraint = null;
+        if ($constraint !== null) {
+            $mockedConstraint = $this->mockConstraint($constraint, [ 'count' => $this->once() ]);
+        }
 
         $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
         $this->assertSame($expectedCount, $itemConstraint->count());

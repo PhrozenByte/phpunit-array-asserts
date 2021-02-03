@@ -25,6 +25,7 @@ use Iterator;
 use IteratorAggregate;
 use NoRewindIterator;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\InvalidArgumentException;
 use Traversable;
 
@@ -42,8 +43,11 @@ use Traversable;
  * means that any Generator will be fully exhausted. If possible, it will try
  * to restore an Iterator's pointer to its previous state.
  *
- * The expected minimum and/or maximum number of items, and the constraint
- * to apply all items to, are passed in the constructor.
+ * The expected minimum and/or maximum number of items, as well as the
+ * constraint to apply all items to, are passed in the constructor. The
+ * constraint can either be an arbitrary `Constraint` instance (e.g.
+ * `PHPUnit\Framework\Constraint\StringContains`), or any static value,
+ * requiring an exact match of the value.
  */
 class SequentialArray extends Constraint
 {
@@ -59,13 +63,13 @@ class SequentialArray extends Constraint
     /**
      * SequentialArray constructor.
      *
-     * @param int             $minItems   required minimum number of items, defaults to 0
-     * @param int|null        $maxItems   required maximum number of items, defaults to NULL (infinite)
-     * @param Constraint|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param int                   $minItems   required minimum number of items, defaults to 0
+     * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
+     * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(int $minItems = 0, int $maxItems = null, Constraint $constraint = null)
+    public function __construct(int $minItems = 0, int $maxItems = null, $constraint = null)
     {
         if ($minItems < 0) {
             throw InvalidArgumentException::create(1, 'non-negative integer');
@@ -81,7 +85,10 @@ class SequentialArray extends Constraint
 
         $this->minItems = $minItems;
         $this->maxItems = $maxItems;
-        $this->constraint = $constraint;
+
+        if ($constraint !== null) {
+            $this->constraint = !($constraint instanceof Constraint) ? new IsEqual($constraint) : $constraint;
+        }
     }
 
     /**

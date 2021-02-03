@@ -127,6 +127,37 @@ testSelfDescribing:
         constraint: *constraint
         expectedDescription: is a sequential array with ≥ 1 and ≤ 2 items matching the constraint "is awesome"
 
+    -   minItems: 0
+        maxItems: ~
+        constraint: static value
+        expectedDescription: >-
+            is a sequential array whose items match the constraint "is equal to 'static value'"
+    -   minItems: 1
+        maxItems: ~
+        constraint: static value
+        expectedDescription: >-
+            is a non-empty sequential array whose items match the constraint "is equal to 'static value'"
+    -   minItems: 2
+        maxItems: ~
+        constraint: static value
+        expectedDescription: >-
+            is a sequential array with ≥ 2 items matching the constraint "is equal to 'static value'"
+    -   minItems: 0
+        maxItems: 1
+        constraint: static value
+        expectedDescription: >-
+            is a sequential array with ≤ 1 items matching the constraint "is equal to 'static value'"
+    -   minItems: 1
+        maxItems: 1
+        constraint: static value
+        expectedDescription: >-
+            is a sequential array with exactly 1 item matching the constraint "is equal to 'static value'"
+    -   minItems: 1
+        maxItems: 2
+        constraint: static value
+        expectedDescription: >-
+            is a sequential array with ≥ 1 and ≤ 2 items matching the constraint "is equal to 'static value'"
+
 testEvaluate:
     -   minItems: 0
         maxItems: ~
@@ -171,6 +202,10 @@ testEvaluate:
         maxItems: ~
         constraint: *constraintMatch
         other: [ 1, 2, 3 ]
+    -   minItems: 0
+        maxItems: ~
+        constraint: static value
+        other: [ "static value", "static value" ]
 
 testEvaluateFail:
     -   minItems: 0
@@ -178,7 +213,8 @@ testEvaluateFail:
         constraint: *constraint
         other: [ "foo", "bar", "baz" ]
         expectedEvaluationCount: 1
-        expectedExceptionMessage: Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
+        expectedExceptionMessage: >-
+            Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
     -   minItems: 0
         maxItems: ~
         constraint: *constraint
@@ -188,7 +224,16 @@ testEvaluateFail:
                 ~object: ArrayIterator
                 array: [ 1, 2, 3 ]
         expectedEvaluationCount: 1
-        expectedExceptionMessage: Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
+        expectedExceptionMessage: >-
+            Failed asserting that %s is a sequential array whose items match the constraint "is awesome".
+    -   minItems: 0
+        maxItems: ~
+        constraint: static value
+        other: [ "other value" ]
+        expectedEvaluationCount: 1
+        expectedExceptionMessage: >-
+            Failed asserting that %s is a sequential array whose items
+            match the constraint "is equal to 'static value'".
 
 testPreEvaluateFail:
     -   minItems: 0
@@ -255,3 +300,7 @@ testCountable:
         maxItems: ~
         constraint: *constraint
         expectedCount: 3
+    -   minItems: 0
+        maxItems: ~
+        constraint: static value
+        expectedCount: 2
