@@ -118,7 +118,7 @@ $this->assertAssociativeArray([
 
 The [`ArrayHasKeyWith` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/ArrayHasKeyWith.php) asserts that an array has a given key and that its value passes another constraint.
 
-Accepts both native arrays and `ArrayAccess` objects. The constraint (parameter `$constraint`) will fail if the key (parameter `$key`) doesn't exist in the array. The item's key and the constraint the value must pass are passed in the constructor.
+Accepts both native arrays and `ArrayAccess` objects. The constraint (parameter `$constraint`) will fail if the key (parameter `$key`) doesn't exist in the array. The item's key, and the constraint the value must pass are passed in the constructor. The constraint can either be an arbitrary `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring an exact match of the value.
 
 The `ArrayAssertsTrait` trait exposes two public methods for the `ArrayHasKeyWith` constraint: Use `ArrayAssertsTrait::assertArrayHasKeyWith()` to perform an assertion, and `ArrayAssertsTrait::arrayHasKeyWith()` to create a new instance of the `ArrayHasKeyWith` constraint.
 
@@ -127,16 +127,16 @@ The `ArrayAssertsTrait` trait exposes two public methods for the `ArrayHasKeyWit
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
 ArrayAssertsTrait::assertArrayHasKeyWith(
-    string|int $key,          // the key of the item to check
-    Constraint $constraint,   // the constraint the item's value is applied to
-    array|ArrayAccess $array, // the array to check
-    string $message = ''      // additional information about the test
+    string|int $key,              // the key of the item to check
+    Constraint|mixed $constraint, // the constraint the item's value is applied to
+    array|ArrayAccess $array,     // the array to check
+    string $message = ''          // additional information about the test
 );
 
 // using new instance of `\PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasKeyWith`
 new ArrayHasKeyWith(
     string|int $key,
-    Constraint $constraint
+    Constraint|mixed $constraint
 );
 ```
 
@@ -150,7 +150,7 @@ $data = [
 ];
 
 // asserts that $data has the item `name` with the value "Arthur Dent"
-$this->assertArrayHasKeyWith('name', $this->identicalTo('Arthur Dent'), $data);
+$this->assertArrayHasKeyWith('name', 'Arthur Dent', $data);
 ```
 
 **Debugging:**
@@ -158,12 +158,12 @@ $this->assertArrayHasKeyWith('name', $this->identicalTo('Arthur Dent'), $data);
 ```php
 $data = [];
 
-$this->assertArrayHasKeyWith('answer', $this->identicalTo(42), $data);
+$this->assertArrayHasKeyWith('answer', 42, $data);
 
 // Will fail with the following message:
 //
 //     Failed asserting that Array &0 () is an array that
-//     has the key 'answer' whose value is identical to 42.
+//     has the key 'answer' whose value is equal to 42.
 ```
 
 ### Constraint `SequentialArray`

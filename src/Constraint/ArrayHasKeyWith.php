@@ -21,6 +21,7 @@ namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 
 use ArrayAccess;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\InvalidArgumentException;
 
 /**
@@ -31,7 +32,9 @@ use PHPUnit\Framework\InvalidArgumentException;
  * if the key doesn't exist in the array.
  *
  * The item's key and the constraint the value must pass are passed in the
- * constructor.
+ * constructor. The constraint can either be an arbitrary `Constraint` instance
+ * (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value,
+ * requiring an exact match of the value.
  */
 class ArrayHasKeyWith extends Constraint
 {
@@ -44,19 +47,19 @@ class ArrayHasKeyWith extends Constraint
     /**
      * ArrayHasKeyWith constructor.
      *
-     * @param int|string $key        the key of the item to check
-     * @param Constraint $constraint the constraint the item's value is applied to
+     * @param int|string       $key        the key of the item to check
+     * @param Constraint|mixed $constraint the constraint the item's value is applied to
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($key, Constraint $constraint)
+    public function __construct($key, $constraint)
     {
         if (!(is_int($key) || is_string($key))) {
             throw InvalidArgumentException::create(1, 'integer or string');
         }
 
         $this->key = $key;
-        $this->constraint = $constraint;
+        $this->constraint = !($constraint instanceof Constraint) ? new IsEqual($constraint) : $constraint;
     }
 
     /**

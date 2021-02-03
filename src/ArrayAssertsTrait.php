@@ -107,7 +107,7 @@ trait ArrayAssertsTrait
      * constraint.
      *
      * @param int|string        $key        the key of the item to check
-     * @param Constraint        $constraint the constraint the item's value is applied to
+     * @param Constraint|mixed  $constraint the constraint the item's value is applied to
      * @param array|ArrayAccess $array      the array to check
      * @param string            $message    additional information about the test
      *
@@ -115,27 +115,27 @@ trait ArrayAssertsTrait
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public static function assertArrayHasKeyWith($key, Constraint $constraint, $array, string $message = ''): void
+    public static function assertArrayHasKeyWith($key, $constraint, $array, string $message = ''): void
     {
         if (!(is_array($array) || ($array instanceof ArrayAccess))) {
             throw InvalidArgumentException::create(3, 'array or ArrayAccess');
         }
 
-        $constraint = new ArrayHasKeyWith($key, $constraint);
-        PHPUnitAssert::assertThat($array, $constraint, $message);
+        $itemConstraint = new ArrayHasKeyWith($key, $constraint);
+        PHPUnitAssert::assertThat($array, $itemConstraint, $message);
     }
 
     /**
      * Returns a new instance of the ArrayHasKeyWith constraint.
      *
-     * @param int|string $key        the key of the item to check
-     * @param Constraint $constraint the constraint the item's value is applied to
+     * @param int|string       $key        the key of the item to check
+     * @param Constraint|mixed $constraint the constraint the item's value is applied to
      *
      * @return ArrayHasKeyWith
      *
      * @throws InvalidArgumentException
      */
-    public static function arrayHasKeyWith($key, Constraint $constraint): ArrayHasKeyWith
+    public static function arrayHasKeyWith($key, $constraint): ArrayHasKeyWith
     {
         return new ArrayHasKeyWith($key, $constraint);
     }

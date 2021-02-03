@@ -37,6 +37,9 @@
                 toString: matches something
                 matches: false
                 count: 2
+    paramsKeyStatic: &paramsKeyStatic
+        key: item
+        constraint: static value
     constraintMatches: &constraintMatches
         constraint: { options: { matches: true } }
 
@@ -57,6 +60,8 @@ testSelfDescribing:
         expectedDescription: is an array that has the key 'one' whose value is funny
     -   <<: *paramsKeyZero
         expectedDescription: is an array that has the key 0 whose value matches something
+    -   <<: *paramsKeyStatic
+        expectedDescription: is an array that has the key 'item' whose value is equal to 'static value'
 
 testEvaluate:
     -   <<: *paramsKeyTwo
@@ -81,6 +86,11 @@ testEvaluate:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\ArrayAccessible
             data: [ 1, 2, 3 ]
         expectedEvaluationValue: 1
+    -   <<: *paramsKeyStatic
+        other:
+            item: static value
+            other: 42
+        expectedEvaluationValue: static value
     -   key: 789
         constraint:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
@@ -124,6 +134,12 @@ testPreEvaluateFail:
         other: ~
         expectedExceptionMessage: |-
             Failed asserting that %s is an array that has the key 0 whose value matches something.
+    -   <<: *paramsKeyStatic
+        other:
+            item: other value
+            other: 42
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has the key 'item' whose value is equal to 'static value'.
     -   key: non-existing
         constraint:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
@@ -155,3 +171,5 @@ testCountable:
         expectedCount: 2
     -   <<: *paramsKeyZero
         expectedCount: 3
+    -   <<: *paramsKeyStatic
+        expectedCount: 2
