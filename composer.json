@@ -39,5 +39,10 @@
         "symfony/yaml": "^4.4",
         "vimeo/psalm": "^4.4",
         "incompass/coverage": "^1.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
