@@ -37,6 +37,9 @@
                 toString: matches something
                 matches: false
                 count: 2
+    paramsIndexStatic: &paramsIndexStatic
+        index: 0
+        constraint: static value
     constraintMatches: &constraintMatches
         constraint: { options: { matches: true } }
 
@@ -47,6 +50,8 @@ testSelfDescribing:
         expectedDescription: is an array that has a value at index 1 which is funny
     -   <<: *paramsIndexZero
         expectedDescription: is an array that has a value at index 0 which matches something
+    -   <<: *paramsIndexStatic
+        expectedDescription: is an array that has a value at index 0 which is equal to 'static value'
 
 testEvaluate:
     -   <<: *paramsIndexTwo
@@ -66,6 +71,11 @@ testEvaluate:
             ~object: ArrayIterator
             array: { 2: "foo", 1: "bar", 0: "baz" }
         expectedEvaluationValue: foo
+    -   <<: *paramsIndexStatic
+        other:
+            item: static value
+            other: 42
+        expectedEvaluationValue: static value
     -   index: 10
         constraint:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
@@ -89,6 +99,13 @@ testEvaluateFail:
         expectedEvaluationValue: foo
         expectedExceptionMessage: |-
             Failed asserting that %s is an array that has a value at index 0 which matches something.
+    -   <<: *paramsIndexStatic
+        other:
+            item: other value
+            other: 42
+        expectedEvaluationValue: other value
+        expectedExceptionMessage: |-
+            Failed asserting that %s is an array that has a value at index 0 which is equal to 'static value'.
 
 testPreEvaluateFail:
     -   <<: *paramsIndexTwo
@@ -133,3 +150,5 @@ testCountable:
         expectedCount: 2
     -   <<: *paramsIndexZero
         expectedCount: 3
+    -   <<: *paramsIndexStatic
+        expectedCount: 2

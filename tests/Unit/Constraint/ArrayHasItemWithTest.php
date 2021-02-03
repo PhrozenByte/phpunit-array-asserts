@@ -37,11 +37,11 @@ class ArrayHasItemWithTest extends TestCase
     /**
      * @dataProvider dataProviderSelfDescribing
      *
-     * @param int        $index
-     * @param Constraint $constraint
-     * @param string     $expectedDescription
+     * @param int              $index
+     * @param Constraint|mixed $constraint
+     * @param string           $expectedDescription
      */
-    public function testSelfDescribing(int $index, Constraint $constraint, string $expectedDescription): void
+    public function testSelfDescribing(int $index, $constraint, string $expectedDescription): void
     {
         $mockedConstraint = $this->mockConstraint($constraint, [ 'toString' => $this->once() ]);
 
@@ -60,17 +60,13 @@ class ArrayHasItemWithTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluate
      *
-     * @param int        $index
-     * @param Constraint $constraint
-     * @param mixed      $other
-     * @param mixed      $expectedEvaluationValue
+     * @param int              $index
+     * @param Constraint|mixed $constraint
+     * @param mixed            $other
+     * @param mixed            $expectedEvaluationValue
      */
-    public function testEvaluate(
-        int $index,
-        Constraint $constraint,
-        $other,
-        $expectedEvaluationValue
-    ): void {
+    public function testEvaluate(int $index, $constraint, $other, $expectedEvaluationValue): void
+    {
         $mockedConstraint = $this->mockConstraint(
             $constraint,
             [ 'evaluate' => $this->once() ],
@@ -96,15 +92,15 @@ class ArrayHasItemWithTest extends TestCase
     /**
      * @dataProvider dataProviderEvaluateFail
      *
-     * @param int        $index
-     * @param Constraint $constraint
-     * @param mixed      $other
-     * @param mixed      $expectedEvaluationValue
-     * @param string     $expectedExceptionMessage
+     * @param int              $index
+     * @param Constraint|mixed $constraint
+     * @param mixed            $other
+     * @param mixed            $expectedEvaluationValue
+     * @param string           $expectedExceptionMessage
      */
     public function testEvaluateFail(
         int $index,
-        Constraint $constraint,
+        $constraint,
         $other,
         $expectedEvaluationValue,
         string $expectedExceptionMessage
@@ -135,17 +131,13 @@ class ArrayHasItemWithTest extends TestCase
     /**
      * @dataProvider dataProviderPreEvaluateFail
      *
-     * @param int        $index
-     * @param Constraint $constraint
-     * @param mixed      $other
-     * @param string     $expectedExceptionMessage
+     * @param int              $index
+     * @param Constraint|mixed $constraint
+     * @param mixed            $other
+     * @param string           $expectedExceptionMessage
      */
-    public function testPreEvaluateFail(
-        int $index,
-        Constraint $constraint,
-        $other,
-        string $expectedExceptionMessage
-    ): void {
+    public function testPreEvaluateFail(int $index, $constraint, $other, string $expectedExceptionMessage): void
+    {
         $mockedConstraint = $this->mockConstraint($constraint);
 
         $itemConstraint = new ArrayHasItemWith($index, $mockedConstraint);
@@ -168,11 +160,11 @@ class ArrayHasItemWithTest extends TestCase
     /**
      * @dataProvider dataProviderCountable
      *
-     * @param int        $index
-     * @param Constraint $constraint
-     * @param int        $expectedCount
+     * @param int              $index
+     * @param Constraint|mixed $constraint
+     * @param int              $expectedCount
      */
-    public function testCountable(int $index, Constraint $constraint, int $expectedCount): void
+    public function testCountable(int $index, $constraint, int $expectedCount): void
     {
         $mockedConstraint = $this->mockConstraint($constraint, [ 'count' => $this->once() ]);
 

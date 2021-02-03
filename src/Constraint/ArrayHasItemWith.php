@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\IsEqual;
 use Traversable;
 
 /**
@@ -34,7 +35,9 @@ use Traversable;
  * Iterator's pointer to its previous state.
  *
  * The index of the item to check, and the constraint its value must pass are
- * passed in the constructor.
+ * passed in the constructor. The constraint can either be an arbitrary
+ * `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`),
+ * or any static value, requiring an exact match of the value.
  */
 class ArrayHasItemWith extends Constraint
 {
@@ -47,13 +50,13 @@ class ArrayHasItemWith extends Constraint
     /**
      * ArrayHasItemWith constructor.
      *
-     * @param int        $index      the index of the item to check
-     * @param Constraint $constraint the constraint the item's value is applied to
+     * @param int              $index      the index of the item to check
+     * @param Constraint|mixed $constraint the constraint the item's value is applied to
      */
-    public function __construct(int $index, Constraint $constraint)
+    public function __construct(int $index, $constraint)
     {
         $this->index = $index;
-        $this->constraint = $constraint;
+        $this->constraint = !($constraint instanceof Constraint) ? new IsEqual($constraint) : $constraint;
     }
 
     /**

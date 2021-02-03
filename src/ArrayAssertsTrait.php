@@ -190,7 +190,7 @@ trait ArrayAssertsTrait
      * passes another constraint.
      *
      * @param int               $index      the index of the item to check
-     * @param Constraint        $constraint the constraint the item's value is applied to
+     * @param Constraint|mixed  $constraint the constraint the item's value is applied to
      * @param array|Traversable $array      the array to check
      * @param string            $message    additional information about the test
      *
@@ -198,16 +198,11 @@ trait ArrayAssertsTrait
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public static function assertArrayHasItemWith(
-        int $index,
-        Constraint $constraint,
-        $array,
-        string $message = ''
-    ): void {
+    public static function assertArrayHasItemWith(int $index, $constraint, $array, string $message = ''): void
+    {
         if (!(is_array($array) || ($array instanceof Traversable))) {
             throw InvalidArgumentException::create(3, 'array or Traversable');
         }
-
         $constraint = new ArrayHasItemWith($index, $constraint);
         PHPUnitAssert::assertThat($array, $constraint, $message);
     }
@@ -215,12 +210,12 @@ trait ArrayAssertsTrait
     /**
      * Returns a new instance of the ArrayHasItemWith constraint.
      *
-     * @param int        $index      the index of the item to check
-     * @param Constraint $constraint the constraint the item's value is applied to
+     * @param int              $index      the index of the item to check
+     * @param Constraint|mixed $constraint the constraint the item's value is applied to
      *
      * @return ArrayHasItemWith
      */
-    public static function arrayHasItemWith(int $index, Constraint $constraint): ArrayHasItemWith
+    public static function arrayHasItemWith(int $index, $constraint): ArrayHasItemWith
     {
         return new ArrayHasItemWith($index, $constraint);
     }

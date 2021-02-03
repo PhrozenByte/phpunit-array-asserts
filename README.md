@@ -229,7 +229,7 @@ $this->assertSequentialArray($data, 4, null, $this->is(IsType::TYPE_STRING));
 
 The [`ArrayHasItemWith` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/ArrayHasItemWith.php) asserts that an array has a item at a given index and that its value passes another constraint.
 
-Accepts both native arrays and `Traversable` objects. The constraint will fail if the array has less items than required. The index of the item to check (parameter `$index`), and the constraint its value must pass (parameter `$constraint`) are passed in the constructor.
+Accepts both native arrays and `Traversable` objects. The constraint will fail if the array has less items than required. The index of the item to check (parameter `$index`), and the constraint its value must pass (parameter `$constraint`) are passed in the constructor. The constraint can either be an arbitrary `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring an exact match of the value.
 
 This constraint will fully traverse any `Traversable` object given. This also means that any `Generator` will be fully exhausted. It doesn't restore an `Iterator`'s pointer to its previous state.
 
@@ -240,16 +240,16 @@ The `ArrayAssertsTrait` trait exposes two public methods for the `ArrayHasItemWi
 ```php
 // using `\PhrozenByte\PHPUnitArrayAsserts\ArrayAssertsTrait` trait
 ArrayAssertsTrait::assertArrayHasItemWith(
-    int $index,               // the index of the item to check
-    Constraint $constraint,   // the constraint the item's value is applied to
-    array|Traversable $array, // the array to check
-    string $message = ''      // additional information about the test
+    int $index,                   // the index of the item to check
+    Constraint|mixed $constraint, // the constraint the item's value is applied to
+    array|Traversable $array,     // the array to check
+    string $message = ''          // additional information about the test
 );
 
 // using new instance of `\PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasItemWith`
 new ArrayHasItemWith(
     int $index,
-    Constraint $constraint
+    Constraint|mixed $constraint
 );
 ```
 
@@ -266,7 +266,7 @@ $data = [
 ];
 
 // asserts that `$data` contains "Life, the Universe and Everything" as third item (i.e. at index 2)
-$this->assertArrayHasItemWith(2, $this->identicalTo("Life, the Universe and Everything"));
+$this->assertArrayHasItemWith(2, "Life, the Universe and Everything");
 ```
 
 **Debugging:**
@@ -274,12 +274,12 @@ $this->assertArrayHasItemWith(2, $this->identicalTo("Life, the Universe and Ever
 ```php
 $data = [];
 
-$this->assertArrayHasItemWith(2, $this->identicalTo('Arthur Dent'), $data);
+$this->assertArrayHasItemWith(2, 'Arthur Dent', $data);
 
 // Will fail with the following message:
 //
 //     Failed asserting that Array &0 () is an array that
-//     has a value at index 2 which is identical to 'Arthur Dent'.
+//     has a value at index 2 which is equal to 'Arthur Dent'.
 ```
 
 Example
