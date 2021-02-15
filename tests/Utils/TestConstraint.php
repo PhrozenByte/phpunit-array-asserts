@@ -38,7 +38,7 @@ class TestConstraint extends Constraint
     /**
      * TestConstraint constructor.
      *
-     * @param array{toString: string, matches: bool, count: int} $options
+     * @param array{toString?: string, matches?: bool, count?: int} $options
      */
     public function __construct(array $options = [])
     {
