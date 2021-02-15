@@ -33,6 +33,9 @@ jobs:
             -   name: Install dependencies
                 run: composer update --prefer-dist --no-progress
 
+            -   name: Check PHP syntax with PHP Parallel Lint
+                run: ./vendor/bin/parallel-lint src/ tests/
+
             -   name: Run Psalm static code analysis
                 run: ./vendor/bin/psalm
 
