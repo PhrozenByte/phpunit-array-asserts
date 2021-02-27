@@ -47,7 +47,7 @@ testInvalidParameters:
         expectedException: PHPUnit\Framework\InvalidArgumentException
         expectedExceptionMessage: >-
             Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
-            must be an integer not lesser than argument #2
+            must be an integer not lesser than argument #1
 
 testSelfDescribing:
     -   minItems: 0

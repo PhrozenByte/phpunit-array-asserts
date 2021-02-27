@@ -87,7 +87,7 @@ class SequentialArray extends Constraint
             if ($maxItems < 0) {
                 throw InvalidArgumentException::create(2, 'non-negative integer');
             } elseif ($minItems > $maxItems) {
-                throw InvalidArgumentException::create(2, 'integer not lesser than argument #2');
+                throw InvalidArgumentException::create(2, 'integer not lesser than argument #1');
             }
         }
 
