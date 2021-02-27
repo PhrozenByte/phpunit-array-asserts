@@ -19,10 +19,12 @@ declare(strict_types=1);
 
 namespace PhrozenByte\PHPUnitArrayAsserts\Tests\Unit\Constraint;
 
+use ArrayIterator;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use PhrozenByte\PHPUnitArrayAsserts\Constraint\ArrayHasItemWith;
 use PhrozenByte\PHPUnitArrayAsserts\Tests\TestCase;
+use PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint;
 use SebastianBergmann\Exporter\Exporter;
 
 /**
@@ -155,6 +157,55 @@ class ArrayHasItemWithTest extends TestCase
     public function dataProviderPreEvaluateFail(): array
     {
         return $this->getTestDataSets('testPreEvaluateFail');
+    }
+
+    public function testIteratorWithIntermediatePointer(): void
+    {
+        $itemConstraint = new ArrayHasItemWith(2, new TestConstraint([ 'matches' => true ]));
+        $other = new class extends ArrayIterator {
+            public function __construct()
+            {
+                parent::__construct([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]);
+
+                // move pointer after item #4
+                foreach ($this as $value) {
+                    if ($value === 4) {
+                        break;
+                    }
+                }
+            }
+        };
+
+        $this->assertCallableThrowsNot(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            ExpectationFailedException::class
+        );
+
+        $this->assertTrue($other->valid());
+        $this->assertSame(4, $other->current());
+    }
+
+    public function testGeneratorWithIntermediatePointer(): void
+    {
+        $expectedException = ExpectationFailedException::class;
+        $expectedExceptionMessage = 'Failed asserting that %s is an array that has a value at index 2 which exists.';
+
+        $itemConstraint = new ArrayHasItemWith(2, new TestConstraint([ 'toString' => 'exists' ]));
+        $other = (function () {
+            for ($i = 1; $i <= 10; $i++) {
+                yield $i;
+            }
+        })();
+
+        // move pointer after item #2
+        $other->next();
+        $other->next();
+
+        $this->assertCallableThrows(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            $expectedException,
+            sprintf($expectedExceptionMessage, (new Exporter())->export($other))
+        );
     }
 
     /**

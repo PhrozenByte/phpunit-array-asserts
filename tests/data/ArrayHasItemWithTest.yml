@@ -85,6 +85,16 @@ testEvaluate:
         other:
             ~generator: { start: 100, step: 10, stop: 1000 }
         expectedEvaluationValue: 200
+    -   index: 2
+        constraint:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint
+            options: { matches: true }
+        other:
+            ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\IteratorAggregated
+            iterator:
+                ~object: ArrayIterator
+                array: [ "foo", "bar", "baz" ]
+        expectedEvaluationValue: baz
 
 testEvaluateFail:
     -   <<: *paramsIndexTwo

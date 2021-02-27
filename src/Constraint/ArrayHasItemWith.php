@@ -19,6 +19,12 @@ declare(strict_types=1);
 
 namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 
+use EmptyIterator;
+use Exception;
+use Generator;
+use Iterator;
+use IteratorAggregate;
+use NoRewindIterator;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsEqual;
 use Traversable;
@@ -31,8 +37,8 @@ use Traversable;
  * if the array has less items than required.
  *
  * This constraint will fully traverse any Traversable object given. This also
- * means that any Generator will be fully exhausted. It doesn't restore an
- * Iterator's pointer to its previous state.
+ * means that any Generator will be fully exhausted. If possible, it will try
+ * to restore an Iterator's pointer to its previous state.
  *
  * The index of the item to check, and the constraint its value must pass are
  * passed in the constructor. The constraint can either be an arbitrary
@@ -73,26 +79,76 @@ class ArrayHasItemWith extends Constraint
     /**
      * Returns whether the given value matches the Constraint.
      *
+     * The keys of an array or Traversable are being ignored when looking for
+     * the `n`th item. Empty arrays never match.
+     *
+     * Please note that this method will fully traverse a Traversable object.
+     * It expects Traversables to be rewindable. For NoRewindIterator instances
+     * it assumes that the iterator is still in its initial state. Generators
+     * will be fully exhausted; if the iterator has begun already, the object
+     * is considered invalid. If an Iterator is given, this method will try to
+     * restore the object's pointer to its previous state. This will silently
+     * fail for NoRewindIterator instances. The behaviour for Iterators with
+     * non-unique keys is undefined.
+     *
      * @param mixed $other the value to evaluate
      *
      * @return bool boolean indicating whether the value matches the Constraint
      */
     protected function matches($other): bool
     {
-        $valueExists = false;
         if (is_array($other)) {
             $other = array_values($other);
-            $valueExists = isset($other[$this->index]);
-        } elseif ($other instanceof Traversable) {
-            $other = iterator_to_array($other, false);
-            $valueExists = isset($other[$this->index]);
+            if (!array_key_exists($this->index, $other)) {
+                return false;
+            }
+
+            return $this->constraint->evaluate($other[$this->index], '', true);
         }
 
-        if (!$valueExists) {
+        if ($other instanceof EmptyIterator) {
             return false;
         }
 
-        return $this->constraint->evaluate($other[$this->index], '', true);
+        if ($other instanceof Traversable) {
+            while ($other instanceof IteratorAggregate) {
+                $other = $other->getIterator();
+            }
+
+            if ($other instanceof Generator) {
+                try {
+                    $other->rewind();
+                } catch (Exception $e) {
+                    return false;
+                }
+            }
+
+            $restorePointer = null;
+            if ($other instanceof Iterator) {
+                if (!($other instanceof Generator) && !($other instanceof NoRewindIterator)) {
+                    $restorePointer = $other->valid() ? $other->key() : null;
+                }
+            }
+
+            $index = 0;
+            $valid = false;
+            foreach ($other as $item) {
+                if ($this->index === $index++) {
+                    $valid = $this->constraint->evaluate($item, '', true);
+                }
+            }
+
+            if ($restorePointer !== null) {
+                $other->rewind();
+                while ($other->valid() && ($other->key() !== $restorePointer)) {
+                    $other->next();
+                }
+            }
+
+            return $valid;
+        }
+
+        return false;
     }
 
     /**
