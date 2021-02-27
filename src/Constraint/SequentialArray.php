@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace PhrozenByte\PHPUnitArrayAsserts\Constraint;
 
 use EmptyIterator;
+use Exception;
 use Generator;
 use Iterator;
 use IteratorAggregate;
@@ -175,10 +176,13 @@ class SequentialArray extends Constraint
      * FALSE otherwise.
      *
      * Please note that this method will fully traverse a Traversable object.
-     * If an Iterator is given, this method will try to restore the object's
-     * pointer to its previous state. This will silently fail for instances of
-     * NoRewindIterator. Generators will be fully exhausted by this method. The
-     * behaviour for Iterators with non-unique keys is undefined.
+     * It expects Traversables to be rewindable. For NoRewindIterator instances
+     * it assumes that the iterator is still in its initial state. Generators
+     * will be fully exhausted; if the iterator has begun already, the object
+     * is considered invalid. If an Iterator is given, this method will try to
+     * restore the object's pointer to its previous state. This will silently
+     * fail for NoRewindIterator instances. The behaviour for Iterators with
+     * non-unique keys is undefined.
      *
      * The second item of the result array holds an integer representing the
      * number of items given. The integer will be ≥ 0 for any traversable data,
@@ -225,6 +229,14 @@ class SequentialArray extends Constraint
         if ($other instanceof Traversable) {
             while ($other instanceof IteratorAggregate) {
                 $other = $other->getIterator();
+            }
+
+            if ($other instanceof Generator) {
+                try {
+                    $other->rewind();
+                } catch (Exception $e) {
+                    return [ false, -1, false ];
+                }
             }
 
             $restorePointer = null;

@@ -230,6 +230,29 @@ class SequentialArrayTest extends TestCase
         $this->assertSame(4, $other->current());
     }
 
+    public function testGeneratorWithIntermediatePointer(): void
+    {
+        $expectedException = ExpectationFailedException::class;
+        $expectedExceptionMessage = 'Failed asserting that %s is a sequential array.';
+
+        $itemConstraint = new SequentialArray();
+        $other = (function () {
+            for ($i = 1; $i <= 10; $i++) {
+                yield $i;
+            }
+        })();
+
+        // move pointer after item #2
+        $other->next();
+        $other->next();
+
+        $this->assertCallableThrows(
+            $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
+            $expectedException,
+            sprintf($expectedExceptionMessage, (new Exporter())->export($other))
+        );
+    }
+
     /**
      * @dataProvider dataProviderCountable
      *
