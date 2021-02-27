@@ -170,7 +170,7 @@ $this->assertArrayHasKeyWith('answer', 42, $data);
 
 The [`SequentialArray` constraint](https://github.com/PhrozenByte/phpunit-array-asserts/blob/master/src/Constraint/SequentialArray.php) asserts that a value is like a sequential array, has a minimum and/or maximum number of items, and that all items pass another constraint.
 
-Sequential arrays are defined as ordered lists with incrementing numeric keys starting from zero. This is especially true for native sequential arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too. `Traversable` objects must have sequential keys to be considered valid. The expected minimum (parameter `$minItems`, defaults to `0`) and/or maximum (parameter `$maxItems`, defaults to `null`, meaning infinite) number of items, and the constraint to apply all items to (optional parameter `$constraint`), are passed in the constructor. The constraint can either be an arbitrary `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring an exact match of the value.
+Sequential arrays are defined as ordered lists with incrementing numeric keys starting from zero. This is especially true for native sequential arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too. `Traversable` objects must have sequential keys to be considered valid. The expected minimum (parameter `$minItems`, defaults to `0`) and/or maximum (parameter `$maxItems`, defaults to `null`, meaning infinite) number of items, and the constraint to apply all items to (optional parameter `$constraint`), are passed in the constructor. The constraint can either be an arbitrary `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`), or any static value, requiring an exact match of the value. Requiring sequential keys can be disabled by setting parameter `$ignoreKeys` to `true` (defaults to `false`), causing the constraint to check just for the required number of items and whether they match the given constraint.
 
 This constraint will fully traverse any `Traversable` object given. This also means that any `Generator` will be fully exhausted. If possible, it will try to restore an `Iterator`'s pointer to its previous state.
 
@@ -185,6 +185,7 @@ ArrayAssertsTrait::assertSequentialArray(
     int $minItems,                       // required minimum number of items
     int $maxItems = null,                // required maximum number of items (pass null for infinite)
     Constraint|mixed $constraint = null, // optional constraint to apply all items to
+    bool $ignoreKeys = false,            // whether to ignore non-sequential keys
     string $message = ''                 // additional information about the test
 );
 
@@ -192,7 +193,8 @@ ArrayAssertsTrait::assertSequentialArray(
 new SequentialArray(
     int $minItems = 0,
     int $maxItems = null,
-    Constraint|mixed $constraint = null
+    Constraint|mixed $constraint = null,
+    bool $ignoreKeys = false
 );
 ```
 

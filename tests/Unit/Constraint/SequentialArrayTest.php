@@ -42,6 +42,7 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param string                $expectedException
      * @param string                $expectedExceptionMessage
      */
@@ -49,11 +50,12 @@ class SequentialArrayTest extends TestCase
         int $minItems,
         ?int $maxItems,
         $constraint,
+        bool $ignoreKeys,
         string $expectedException,
         string $expectedExceptionMessage
     ): void {
-        $this->assertCallableThrows(static function () use ($minItems, $maxItems, $constraint) {
-            new SequentialArray($minItems, $maxItems, $constraint);
+        $this->assertCallableThrows(static function () use ($minItems, $maxItems, $constraint, $ignoreKeys) {
+            new SequentialArray($minItems, $maxItems, $constraint, $ignoreKeys);
         }, $expectedException, $expectedExceptionMessage);
     }
 
@@ -71,16 +73,22 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param string                $expectedDescription
      */
-    public function testSelfDescribing(int $minItems, ?int $maxItems, $constraint, string $expectedDescription): void
-    {
+    public function testSelfDescribing(
+        int $minItems,
+        ?int $maxItems,
+        $constraint,
+        bool $ignoreKeys,
+        string $expectedDescription
+    ): void {
         $mockedConstraint = null;
         if ($constraint !== null) {
             $mockedConstraint = $this->mockConstraint($constraint, [ 'toString' => $this->once() ]);
         }
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint, $ignoreKeys);
         $this->assertSame($expectedDescription, $itemConstraint->toString());
     }
 
@@ -98,9 +106,10 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param mixed                 $other
      */
-    public function testEvaluate(int $minItems, ?int $maxItems, $constraint, $other): void
+    public function testEvaluate(int $minItems, ?int $maxItems, $constraint, bool $ignoreKeys, $other): void
     {
         $mockedConstraint = null;
         if ($constraint !== null) {
@@ -110,7 +119,7 @@ class SequentialArrayTest extends TestCase
             );
         }
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint, $ignoreKeys);
 
         $this->assertCallableThrowsNot(
             $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
@@ -132,6 +141,7 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param mixed                 $other
      * @param int                   $expectedEvaluationCount
      * @param string                $expectedExceptionMessage
@@ -140,6 +150,7 @@ class SequentialArrayTest extends TestCase
         int $minItems,
         ?int $maxItems,
         $constraint,
+        bool $ignoreKeys,
         $other,
         int $expectedEvaluationCount,
         string $expectedExceptionMessage
@@ -152,7 +163,7 @@ class SequentialArrayTest extends TestCase
             );
         }
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint, $ignoreKeys);
 
         $this->assertCallableThrows(
             new CallableProxy([ $itemConstraint, 'evaluate' ], $other),
@@ -175,6 +186,7 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param mixed                 $other
      * @param string                $expectedExceptionMessage
      */
@@ -182,12 +194,13 @@ class SequentialArrayTest extends TestCase
         int $minItems,
         ?int $maxItems,
         $constraint,
+        bool $ignoreKeys,
         $other,
         string $expectedExceptionMessage
     ): void {
         $mockedConstraint = ($constraint !== null) ? $this->mockConstraint($constraint) : null;
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint, $ignoreKeys);
 
         $this->assertCallableThrows(
             $this->callableProxy([ $itemConstraint, 'evaluate' ], $other),
@@ -259,12 +272,14 @@ class SequentialArrayTest extends TestCase
      * @param int                   $minItems
      * @param int|null              $maxItems
      * @param Constraint|mixed|null $constraint
+     * @param bool                  $ignoreKeys
      * @param int                   $expectedCount
      */
     public function testCountable(
         int $minItems,
         ?int $maxItems,
         $constraint,
+        bool $ignoreKeys,
         int $expectedCount
     ): void {
         $mockedConstraint = null;
@@ -272,7 +287,7 @@ class SequentialArrayTest extends TestCase
             $mockedConstraint = $this->mockConstraint($constraint, [ 'count' => $this->once() ]);
         }
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $mockedConstraint, $ignoreKeys);
         $this->assertSame($expectedCount, $itemConstraint->count());
     }
 

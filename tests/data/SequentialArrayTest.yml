@@ -27,6 +27,7 @@ testInvalidParameters:
     -   minItems: -1
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedException: PHPUnit\Framework\InvalidArgumentException
         expectedExceptionMessage: >-
             Argument #1 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
@@ -34,6 +35,7 @@ testInvalidParameters:
     -   minItems: 0
         maxItems: -1
         constraint: ~
+        ignoreKeys: false
         expectedException: PHPUnit\Framework\InvalidArgumentException
         expectedExceptionMessage: >-
             Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
@@ -41,6 +43,7 @@ testInvalidParameters:
     -   minItems: 2
         maxItems: 1
         constraint: ~
+        ignoreKeys: false
         expectedException: PHPUnit\Framework\InvalidArgumentException
         expectedExceptionMessage: >-
             Argument #2 of PhrozenByte\PHPUnitArrayAsserts\Constraint\SequentialArray::__construct()
@@ -50,143 +53,225 @@ testSelfDescribing:
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array
     -   minItems: 1
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a non-empty sequential array
     -   minItems: 2
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 2 items
     -   minItems: 3
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 3 items
 
     -   minItems: 0
         maxItems: 0
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is an empty array
     -   minItems: 0
         maxItems: 1
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≤ 1 items
     -   minItems: 0
         maxItems: 2
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≤ 2 items
     -   minItems: 0
         maxItems: 3
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≤ 3 items
 
     -   minItems: 1
         maxItems: 1
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with exactly 1 item
     -   minItems: 1
         maxItems: 2
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 1 and ≤ 2 items
     -   minItems: 1
         maxItems: 3
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 1 and ≤ 3 items
     -   minItems: 2
         maxItems: 2
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with exactly 2 items
     -   minItems: 2
         maxItems: 3
         constraint: ~
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 2 and ≤ 3 items
 
     -   minItems: 0
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a sequential array whose items match the constraint "is awesome"
     -   minItems: 1
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a non-empty sequential array whose items match the constraint "is awesome"
     -   minItems: 2
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 2 items matching the constraint "is awesome"
     -   minItems: 0
         maxItems: 1
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≤ 1 items matching the constraint "is awesome"
     -   minItems: 1
         maxItems: 1
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a sequential array with exactly 1 item matching the constraint "is awesome"
     -   minItems: 1
         maxItems: 2
         constraint: *constraint
+        ignoreKeys: false
         expectedDescription: is a sequential array with ≥ 1 and ≤ 2 items matching the constraint "is awesome"
 
     -   minItems: 0
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a sequential array whose items match the constraint "is equal to 'static value'"
     -   minItems: 1
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a non-empty sequential array whose items match the constraint "is equal to 'static value'"
     -   minItems: 2
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a sequential array with ≥ 2 items matching the constraint "is equal to 'static value'"
     -   minItems: 0
         maxItems: 1
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a sequential array with ≤ 1 items matching the constraint "is equal to 'static value'"
     -   minItems: 1
         maxItems: 1
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a sequential array with exactly 1 item matching the constraint "is equal to 'static value'"
     -   minItems: 1
         maxItems: 2
         constraint: static value
+        ignoreKeys: false
         expectedDescription: >-
             is a sequential array with ≥ 1 and ≤ 2 items matching the constraint "is equal to 'static value'"
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is a list array
+    -   minItems: 1
+        maxItems: ~
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is a non-empty list array
+    -   minItems: 0
+        maxItems: 0
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is an empty array
+    -   minItems: 0
+        maxItems: 1
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is a list array with ≤ 1 items
+    -   minItems: 1
+        maxItems: 1
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is a list array with exactly 1 item
+    -   minItems: 1
+        maxItems: 2
+        constraint: ~
+        ignoreKeys: true
+        expectedDescription: is a list array with ≥ 1 and ≤ 2 items
+    -   minItems: 0
+        maxItems: ~
+        constraint: *constraint
+        ignoreKeys: true
+        expectedDescription: is a list array whose items match the constraint "is awesome"
+    -   minItems: 1
+        maxItems: ~
+        constraint: *constraint
+        ignoreKeys: true
+        expectedDescription: is a non-empty list array whose items match the constraint "is awesome"
+    -   minItems: 0
+        maxItems: ~
+        constraint: static value
+        ignoreKeys: true
+        expectedDescription: is a list array whose items match the constraint "is equal to 'static value'"
+    -   minItems: 1
+        maxItems: ~
+        constraint: static value
+        ignoreKeys: true
+        expectedDescription: is a non-empty list array whose items match the constraint "is equal to 'static value'"
 
 testEvaluate:
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: []
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: EmptyIterator
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: ArrayIterator
 
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: [ 1, 2, 3 ]
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: ArrayIterator
             array: { 0: "foo", 1: "bar", 2: "baz" }
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\IteratorAggregated
             iterator:
@@ -195,22 +280,41 @@ testEvaluate:
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~generator: {}
 
     -   minItems: 0
         maxItems: ~
         constraint: *constraintMatch
+        ignoreKeys: false
         other: [ 1, 2, 3 ]
     -   minItems: 0
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         other: [ "static value", "static value" ]
+
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        ignoreKeys: true
+        other: { foo: 2, bar: 1, baz: 0 }
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
+    -   minItems: 0
+        maxItems: ~
+        constraint: ~
+        ignoreKeys: true
+        other:
+            ~object: ArrayIterator
+            array: { 2: "foo", 1: "bar", 0: "baz" }
+        expectedExceptionMessage: Failed asserting that %s is a sequential array.
 
 testEvaluateFail:
     -   minItems: 0
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         other: [ "foo", "bar", "baz" ]
         expectedEvaluationCount: 1
         expectedExceptionMessage: >-
@@ -218,6 +322,7 @@ testEvaluateFail:
     -   minItems: 0
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         other:
             ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\IteratorAggregated
             iterator:
@@ -229,6 +334,7 @@ testEvaluateFail:
     -   minItems: 0
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         other: [ "other value" ]
         expectedEvaluationCount: 1
         expectedExceptionMessage: >-
@@ -239,22 +345,26 @@ testPreEvaluateFail:
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: ~
         expectedExceptionMessage: Failed asserting that %s is a sequential array.
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: not an array
         expectedExceptionMessage: Failed asserting that %s is a sequential array.
 
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: { foo: 2, bar: 1, baz: 0 }
         expectedExceptionMessage: Failed asserting that %s is a sequential array.
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: ArrayIterator
             array: { 2: "foo", 1: "bar", 0: "baz" }
@@ -263,22 +373,26 @@ testPreEvaluateFail:
     -   minItems: 1
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other: []
         expectedExceptionMessage: Failed asserting that %s is a non-empty sequential array.
     -   minItems: 2
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: EmptyIterator
         expectedExceptionMessage: Failed asserting that %s is a sequential array with ≥ 2 items.
     -   minItems: 0
         maxItems: 0
         constraint: ~
+        ignoreKeys: false
         other: [ "single value" ]
         expectedExceptionMessage: Failed asserting that %s is an empty array.
     -   minItems: 0
         maxItems: 2
         constraint: ~
+        ignoreKeys: false
         other:
             ~object: ArrayIterator
             array:
@@ -287,6 +401,7 @@ testPreEvaluateFail:
     -   minItems: 0
         maxItems: 3
         constraint: ~
+        ignoreKeys: false
         other:
             ~generator: { start: 0, step: 1, stop: 9 }
         expectedExceptionMessage: Failed asserting that %s is a sequential array with ≤ 3 items.
@@ -295,12 +410,15 @@ testCountable:
     -   minItems: 0
         maxItems: ~
         constraint: ~
+        ignoreKeys: false
         expectedCount: 1
     -   minItems: 0
         maxItems: ~
         constraint: *constraint
+        ignoreKeys: false
         expectedCount: 3
     -   minItems: 0
         maxItems: ~
         constraint: static value
+        ignoreKeys: false
         expectedCount: 2

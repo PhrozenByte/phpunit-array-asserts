@@ -39,16 +39,19 @@ use Traversable;
  * keys starting from zero. This is especially true for native sequential
  * arrays like `[ "foo", "bar" ]`. Empty arrays are considered valid, too.
  * Traversable objects must have sequential keys to be considered valid.
+ * Requiring sequential keys can be disabled, causing this constraint to just
+ * check for the required number of items an whether all of its items are
+ * considered valid.
  *
  * This constraint will fully traverse any Traversable object given. This also
  * means that any Generator will be fully exhausted. If possible, it will try
  * to restore an Iterator's pointer to its previous state.
  *
  * The expected minimum and/or maximum number of items, as well as the
- * constraint to apply all items to, are passed in the constructor. The
- * constraint can either be an arbitrary `Constraint` instance (e.g.
- * `PHPUnit\Framework\Constraint\StringContains`), or any static value,
- * requiring an exact match of the value.
+ * constraint to apply all items to and the option to disable key checking, are
+ * passed in the constructor. The constraint can either be an arbitrary
+ * `Constraint` instance (e.g. `PHPUnit\Framework\Constraint\StringContains`),
+ * or any static value, requiring an exact match of the value.
  */
 class SequentialArray extends Constraint
 {
@@ -61,16 +64,20 @@ class SequentialArray extends Constraint
     /** @var Constraint|null */
     protected $constraint;
 
+    /** @var bool */
+    protected $ignoreKeys;
+
     /**
      * SequentialArray constructor.
      *
      * @param int                   $minItems   required minimum number of items, defaults to 0
      * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
      * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param bool                  $ignoreKeys whether to ignore non-sequential keys (defaults to FALSE)
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(int $minItems = 0, int $maxItems = null, $constraint = null)
+    public function __construct(int $minItems = 0, int $maxItems = null, $constraint = null, bool $ignoreKeys = false)
     {
         if ($minItems < 0) {
             throw InvalidArgumentException::create(1, 'non-negative integer');
@@ -86,6 +93,7 @@ class SequentialArray extends Constraint
 
         $this->minItems = $minItems;
         $this->maxItems = $maxItems;
+        $this->ignoreKeys = $ignoreKeys;
 
         if ($constraint !== null) {
             $this->constraint = !($constraint instanceof Constraint) ? new IsEqual($constraint) : $constraint;
@@ -103,11 +111,12 @@ class SequentialArray extends Constraint
             return 'is an empty array';
         }
 
+        $description = !$this->ignoreKeys ? 'sequential array' : 'list array';
         if (($this->minItems <= 1) && ($this->maxItems === null)) {
-            $text = 'is a' . (($this->minItems > 0) ? ' non-empty' : '') . ' sequential array';
+            $text = 'is a' . (($this->minItems > 0) ? ' non-empty' : '') . ' ' . $description;
             $text .= ($this->constraint !== null) ? ' whose items match' : '';
         } else {
-            $text = 'is a sequential array';
+            $text = 'is a ' . $description;
             if ($this->minItems && $this->maxItems) {
                 if ($this->minItems === $this->maxItems) {
                     $text .= ' with exactly ' . $this->minItems . ' ' . (($this->minItems > 1) ? 'items' : 'item');
@@ -207,7 +216,11 @@ class SequentialArray extends Constraint
     {
         if (is_array($other)) {
             $itemCount = count($other);
-            $valid = (($itemCount === 0) || (isset($other[0]) && ($other === array_values($other))));
+
+            $valid = true;
+            if (($itemCount > 0) && !$this->ignoreKeys) {
+                $valid = (isset($other[0]) && ($other === array_values($other)));
+            }
 
             $itemsValid = true;
             if ($valid && ($this->constraint !== null)) {
@@ -250,7 +263,7 @@ class SequentialArray extends Constraint
             $itemCount = 0;
             $itemsValid = true;
             foreach ($other as $key => $item) {
-                if ($key !== $itemCount++) {
+                if (($key !== $itemCount++) && !$this->ignoreKeys) {
                     $valid = false;
                 }
 

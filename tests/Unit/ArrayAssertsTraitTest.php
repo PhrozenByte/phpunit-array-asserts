@@ -260,26 +260,21 @@ class ArrayAssertsTraitTest extends TestCase
     /**
      * @dataProvider dataProviderSequentialArray
      *
-     * @param int               $minItems
-     * @param int|null          $maxItems
-     * @param Constraint|null   $constraint
+     * @param int             $minItems
+     * @param int|null        $maxItems
+     * @param Constraint|null $constraint
+     * @param bool            $ignoreKeys
      */
     public function testSequentialArray(
         int $minItems,
         ?int $maxItems,
-        ?Constraint $constraint
+        ?Constraint $constraint,
+        bool $ignoreKeys
     ): void {
-        $this->mockConstraintInstance(
-            SequentialArray::class,
-            [ $minItems, $maxItems, $constraint ]
-        );
+        $constraintArgs = [ $minItems, $maxItems, $constraint, $ignoreKeys ];
+        $this->mockConstraintInstance(SequentialArray::class, $constraintArgs);
 
-        $callableProxy = new CachedCallableProxy(
-            [ Assert::class, 'sequentialArray' ],
-            $minItems,
-            $maxItems,
-            $constraint
-        );
+        $callableProxy = new CachedCallableProxy([ Assert::class, 'sequentialArray' ], ...$constraintArgs);
 
         $this->assertCallableThrowsNot($callableProxy, InvalidArgumentException::class);
         $this->assertInstanceOf(SequentialArray::class, $callableProxy->getReturnValue());
@@ -291,22 +286,21 @@ class ArrayAssertsTraitTest extends TestCase
      * @param int               $minItems
      * @param int|null          $maxItems
      * @param Constraint|null   $constraint
+     * @param bool              $ignoreKeys
      * @param array|Traversable $array
      */
     public function testAssertSequentialArray(
         int $minItems,
         ?int $maxItems,
         ?Constraint $constraint,
+        bool $ignoreKeys,
         $array
     ): void {
-        $this->mockConstraintInstance(
-            SequentialArray::class,
-            [ $minItems, $maxItems, $constraint ],
-            [ $array, '' ]
-        );
+        $constraintArgs = [ $minItems, $maxItems, $constraint, $ignoreKeys ];
+        $this->mockConstraintInstance(SequentialArray::class, $constraintArgs, [ $array, '' ]);
 
         $this->assertCallableThrowsNot(
-            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, $minItems, $maxItems, $constraint),
+            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, ...$constraintArgs),
             InvalidArgumentException::class
         );
     }
@@ -325,6 +319,7 @@ class ArrayAssertsTraitTest extends TestCase
      * @param int               $minItems
      * @param int|null          $maxItems
      * @param Constraint|null   $constraint
+     * @param bool              $ignoreKeys
      * @param array|Traversable $array
      * @param string            $expectedException
      * @param string            $expectedExceptionMessage
@@ -333,18 +328,16 @@ class ArrayAssertsTraitTest extends TestCase
         int $minItems,
         ?int $maxItems,
         ?Constraint $constraint,
+        bool $ignoreKeys,
         $array,
         string $expectedException,
         string $expectedExceptionMessage
     ): void {
-        $this->mockConstraintInstance(
-            SequentialArray::class,
-            [ $minItems, $maxItems, $constraint ],
-            [ $array, '' ]
-        );
+        $constraintArgs = [ $minItems, $maxItems, $constraint, $ignoreKeys ];
+        $this->mockConstraintInstance(SequentialArray::class, $constraintArgs, [ $array, '' ]);
 
         $this->assertCallableThrows(
-            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, $minItems, $maxItems, $constraint),
+            $this->callableProxy([ Assert::class, 'assertSequentialArray' ], $array, ...$constraintArgs),
             $expectedException,
             $expectedExceptionMessage
         );

@@ -26,6 +26,7 @@
         minItems: 1
         maxItems: 3
         constraint: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }
+        ignoreKeys: true
     testArrayHasItemWithBase: &testArrayHasItemWithBase
         index: 1
         constraint: { ~object: PhrozenByte\PHPUnitArrayAsserts\Tests\Utils\TestConstraint }

@@ -148,6 +148,7 @@ trait ArrayAssertsTrait
      * @param int                   $minItems   required minimum number of items, defaults to 0
      * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
      * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param bool                  $ignoreKeys whether to ignore non-sequential keys (defaults to FALSE)
      * @param string                $message    additional information about the test
      *
      * @throws ExpectationFailedException
@@ -159,13 +160,14 @@ trait ArrayAssertsTrait
         int $minItems,
         int $maxItems = null,
         $constraint = null,
+        bool $ignoreKeys = false,
         string $message = ''
     ): void {
         if (!(is_array($array) || ($array instanceof Traversable))) {
             throw InvalidArgumentException::create(1, 'array or Traversable');
         }
 
-        $itemConstraint = new SequentialArray($minItems, $maxItems, $constraint);
+        $itemConstraint = new SequentialArray($minItems, $maxItems, $constraint, $ignoreKeys);
         PHPUnitAssert::assertThat($array, $itemConstraint, $message);
     }
 
@@ -175,14 +177,19 @@ trait ArrayAssertsTrait
      * @param int                   $minItems   required minimum number of items, defaults to 0
      * @param int|null              $maxItems   required maximum number of items, defaults to NULL (infinite)
      * @param Constraint|mixed|null $constraint optional constraint to apply all items to (defaults to NULL)
+     * @param bool                  $ignoreKeys whether to ignore non-sequential keys (defaults to FALSE)
      *
      * @return SequentialArray
      *
      * @throws InvalidArgumentException
      */
-    public static function sequentialArray(int $minItems, int $maxItems = null, $constraint = null): SequentialArray
-    {
-        return new SequentialArray($minItems, $maxItems, $constraint);
+    public static function sequentialArray(
+        int $minItems,
+        int $maxItems = null,
+        $constraint = null,
+        bool $ignoreKeys = false
+    ): SequentialArray {
+        return new SequentialArray($minItems, $maxItems, $constraint, $ignoreKeys);
     }
 
     /**
