@@ -450,7 +450,7 @@ class ArrayAssertsTraitTest extends TestCase
     private function mockConstraintInstance(
         string $className,
         array $constructorArguments = [],
-        array $evaluateArguments = null
+        ?array $evaluateArguments = null
     ): MockInterface {
         $instanceMock = Mockery::mock('overload:' . $className, Constraint::class);
 
