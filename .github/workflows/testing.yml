@@ -44,3 +44,4 @@ jobs:
 
             -   name: Check code coverage
                 run: ./vendor/bin/coverage-check clover.xml 100
+                if: contains('7.2 7.3 7.4', matrix.php-version)
