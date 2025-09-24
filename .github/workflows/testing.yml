@@ -38,6 +38,7 @@ jobs:
 
             -   name: Run Psalm static code analysis
                 run: ./vendor/bin/psalm
+                if: contains('7.2 7.3 7.4 8.0 8.1 8.2 8.3', matrix.php-version)
 
             -   name: Run PHPUnit test suite
                 run: ./vendor/bin/phpunit
