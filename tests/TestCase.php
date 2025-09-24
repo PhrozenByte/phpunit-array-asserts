@@ -52,7 +52,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function mockConstraint(
         $constraint,
         array $invocationRules = [],
-        array $evaluateParameters = null
+        ?array $evaluateParameters = null
     ) {
         if (!($constraint instanceof Constraint)) {
             return $constraint;
