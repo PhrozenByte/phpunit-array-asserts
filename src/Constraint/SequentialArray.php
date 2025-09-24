@@ -77,7 +77,7 @@ class SequentialArray extends Constraint
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(int $minItems = 0, int $maxItems = null, $constraint = null, bool $ignoreKeys = false)
+    public function __construct(int $minItems = 0, ?int $maxItems = null, $constraint = null, bool $ignoreKeys = false)
     {
         if ($minItems < 0) {
             throw InvalidArgumentException::create(1, 'non-negative integer');
